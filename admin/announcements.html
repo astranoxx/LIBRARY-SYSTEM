@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Announcements - Library Management System</title>
+  <link rel="stylesheet" href="../css/main.css">
+  <link rel="stylesheet" href="../css/admin.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <img src="../assets/logo.png" alt="Library Logo" class="sidebar-logo">
+        <h3>Library System</h3>
+      </div>
+      <nav class="sidebar-nav">
+        <ul>
+          <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+          <li><a href="manage-members.html"><i class="fas fa-users"></i> Manage Members</a></li>
+          <li><a href="manage-books.html"><i class="fas fa-book"></i> Manage Books</a></li>
+          <li><a href="book-requests.html"><i class="fas fa-book-reader"></i> Book Requests</a></li>
+          <li><a href="room-requests.html"><i class="fas fa-door-open"></i> Room Requests</a></li>
+          <li class="active"><a href="announcements.html"><i class="fas fa-bullhorn"></i> Announcements</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+   <!-- Main Content -->
+    <main class="main-content">
+      <!-- Top Navigation -->
+      <header class="top-nav">
+        <div class="search-container">
+          <input type="text" placeholder="Search requests...">
+          <button type="button"><i class="fas fa-search"></i></button>
+        </div>
+        
+        <div class="user-menu">
+          <div class="notifications">
+            <button class="icon-btn"><i class="fas fa-bell"></i></button>
+          </div>
+          
+          <div class="profile-dropdown">
+            <button class="profile-toggle">
+              <img src="../assets/images/default-profile.png" alt="Profile" id="user-profile-img">
+              <span id="user-name">Admin User</span>
+              <i class="fas fa-chevron-down"></i>
+            </button>
+            
+            <div class="dropdown-menu">
+              <a href="#" id="edit-profile"><i class="fas fa-user-edit"></i> Edit Profile</a>
+              <a href="#" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+          </div>
+        </div>
+      </header>
+      <div class="content">
+        <h1 class="page-title">Manage Announcements</h1>
+
+        <!-- Add Announcement Form -->
+        <section class="announcement-form">
+          <h2>Add New Announcement</h2>
+          <form id="announcementForm">
+            <label for="type">Type:</label>
+            <select id="type" required>
+              <option value="Important">Important</option>
+              <option value="General">General</option>
+              <option value="Events">Events</option>
+              <option value="Maintenance">Maintenance</option>
+            </select>
+
+            <label for="title">Title:</label>
+            <input type="text" id="title" required>
+
+            <label for="content">Content:</label>
+            <textarea id="content" rows="4" required></textarea>
+
+            <button type="submit" class="btn">Post Announcement</button>
+          </form>
+        </section>
+
+        <!-- Announcement List -->
+        <section class="announcement-list">
+          <h2>Existing Announcements</h2>
+
+          <div class="announcement-card">
+            <span class="tag important">Important</span>
+            <p class="date">Sep 20, 2023</p>
+            <h3>Library Hours Extended During Finals Week</h3>
+            <p>Library will remain open until midnight from October 1-15 to accommodate students during finals week.</p>
+            <p><strong>Posted by:</strong> Library Administration</p>
+            <button class="btn edit">Edit</button>
+            <button class="btn delete">Delete</button>
+          </div>
+
+          <div class="announcement-card">
+            <span class="tag general">General</span>
+            <p class="date">Sep 15, 2023</p>
+            <h3>New Books Added to Collection</h3>
+            <p>We've added 50 new titles to our technology section including programming and AI books.</p>
+            <p><strong>Posted by:</strong> Library Staff</p>
+            <button class="btn edit">Edit</button>
+            <button class="btn delete">Delete</button>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    document.getElementById("announcementForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      alert("Announcement posted (functionality can be connected to backend)");
+      // Add JS or backend code to store data here
+    });
+  </script>
+</body>
+</html>

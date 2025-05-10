@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book Requests - Library Management System</title>
+  <link rel="stylesheet" href="../css/main.css">
+  <link rel="stylesheet" href="../css/admin.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <img src="../assets/logo.png" alt="Library Logo" class="sidebar-logo">
+        <h3>Library System</h3>
+      </div>
+      
+      <nav class="sidebar-nav">
+        <ul>
+          <li>
+            <a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+          </li>
+          <li class="active">
+            <a href="manage-members.html"><i class="fas fa-users"></i> Manage Members</a>
+          </li>
+          <li>
+            <a href="manage-books.html"><i class="fas fa-book"></i> Manage Books</a>
+          </li>
+          <li>
+            <a href="book-requests.html"><i class="fas fa-book-reader"></i> Book Requests</a>
+          </li>
+          <li>
+            <a href="room-requests.html"><i class="fas fa-door-open"></i> Room Requests</a>
+          </li>
+          <li>
+            <a href="announcements.html"><i class="fas fa-bullhorn"></i> Announcements</a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Top Navigation -->
+      <header class="top-nav">
+        <div class="search-container">
+          <input type="text" placeholder="Search requests...">
+          <button type="button"><i class="fas fa-search"></i></button>
+        </div>
+        
+        <div class="user-menu">
+          <div class="notifications">
+            <button class="icon-btn"><i class="fas fa-bell"></i></button>
+          </div>
+          
+          <div class="profile-dropdown">
+            <button class="profile-toggle">
+              <img src="../assets/images/default-profile.png" alt="Profile" id="user-profile-img">
+              <span id="user-name">Admin User</span>
+              <i class="fas fa-chevron-down"></i>
+            </button>
+            
+            <div class="dropdown-menu">
+              <a href="#" id="edit-profile"><i class="fas fa-user-edit"></i> Edit Profile</a>
+              <a href="#" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+          </div>
+        </div>
+      </header>
+    
+<main class="main-content">
+      <section class="section-header">
+        <h1>Manage Members</h1>
+      </section>
+
+      <!-- Students -->
+      <section class="section">
+        <div class="section-title">
+          <h2>Students</h2>
+          <button onclick="openModal('studentModal')">Add Student</button>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Student Number</th>
+              <th>Name</th>
+              <th>Year</th>
+              <th>Course</th>
+              <th>Section</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>123456</td>
+              <td>Wally Bayola</td>
+              <td>4</td>
+              <td>CCS</td>
+              <td>A</td>
+              <td>
+                <button class="edit">Edit</button>
+                <button class="delete">Delete</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- Faculty -->
+      <section class="section">
+        <div class="section-title">
+          <h2>Faculty/Staff</h2>
+          <button onclick="openModal('facultyModal')">Add Faculty</button>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Employee Number</th>
+              <th>Name</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>EMP001</td>
+              <td>Wally Bayola</td>
+              <td>
+                <button class="edit">Edit</button>
+                <button class="delete">Delete</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+    </main>
+  </div>
+
+  <!-- Student Modal -->
+  <div class="modal" id="studentModal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal('studentModal')">&times;</span>
+      <h2>Add Student</h2>
+      <form>
+        <input type="text" placeholder="Student Number" required />
+        <input type="text" placeholder="Full Name" required />
+        <input type="text" placeholder="Year" required />
+        <input type="text" placeholder="Course" required />
+        <input type="text" placeholder="Section" required />
+        <button type="submit">Add</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Faculty Modal -->
+  <div class="modal" id="facultyModal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal('facultyModal')">&times;</span>
+      <h2>Add Faculty/Staff</h2>
+      <form>
+        <input type="text" placeholder="Employee Number" required />
+        <input type="text" placeholder="Full Name" required />
+        <button type="submit">Add</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    function openModal(id) {
+      document.getElementById(id).style.display = "block";
+    }
+    function closeModal(id) {
+      document.getElementById(id).style.display = "none";
+    }
+
+    // Optional: Close modal on outside click
+    window.onclick = function(event) {
+      document.querySelectorAll('.modal').forEach(modal => {
+        if (event.target === modal) modal.style.display = "none";
+      });
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Announcements - Library Management System</title>
+  <link rel="stylesheet" href="../css/main.css">
+  <link rel="stylesheet" href="../css/student.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <img src="../assets/logo.png" alt="Library Logo" class="sidebar-logo">
+        <h3>Library System</h3>
+      </div>
+      
+      <nav class="sidebar-nav">
+        <ul>
+          <li>
+            <a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+          </li>
+          <li>
+            <a href="transactions.html"><i class="fas fa-exchange-alt"></i> Transactions</a>
+          </li>
+          <li>
+            <a href="book-request.html"><i class="fas fa-book"></i> Book Request</a>
+          </li>
+          <li>
+            <a href="room-reservation.html"><i class="fas fa-door-open"></i> Room Reservation</a>
+          </li>
+          <li class="active">
+            <a href="announcements.html"><i class="fas fa-bullhorn"></i> Announcements</a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Top Navigation -->
+      <header class="top-nav">
+        <div class="search-container">
+          <input type="text" placeholder="Search announcements...">
+          <button type="button"><i class="fas fa-search"></i></button>
+        </div>
+        
+        <div class="user-menu">
+          <div class="notifications">
+            <button class="icon-btn"><i class="fas fa-bell"></i></button>
+          </div>
+          
+          <div class="profile-dropdown">
+            <button class="profile-toggle">
+              <img src="../assets/images/default-profile.png" alt="Profile" id="user-profile-img">
+              <span id="user-name">John Doe</span>
+              <i class="fas fa-chevron-down"></i>
+            </button>
+            
+            <div class="dropdown-menu">
+              <a href="#" id="edit-profile"><i class="fas fa-user-edit"></i> Edit Profile</a>
+              <a href="#" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+          </div>
+        </div>
+      </header>
+      
+      <!-- Content Area -->
+      <div class="content">
+        <h1 class="page-title">Announcements</h1>
+        
+        <!-- Filter Tabs -->
+        <div class="tabs">
+          <button class="tab-btn active" data-tab="all">All</button>
+          <button class="tab-btn" data-tab="general">General</button>
+          <button class="tab-btn" data-tab="events">Events</button>
+          <button class="tab-btn" data-tab="maintenance">Maintenance</button>
+        </div>
+        
+        <!-- Announcements List -->
+        <div class="announcement-list">
+          <!-- Important Announcement -->
+          <div class="announcement-item important">
+            <div class="announcement-header">
+              <div class="announcement-meta">
+                <span class="announcement-category">Important</span>
+                <span class="announcement-date">Sep 20, 2023</span>
+              </div>
+              <h3>Library Hours Extended During Finals Week</h3>
+            </div>
+            <div class="announcement-content">
+              <p>The library will remain open until midnight from October 1-15 to accommodate students during finals week. All services will be available during extended hours.</p>
+              <ul>
+                <li>Extended Hours: 7:00 AM - 12:00 MN</li>
+                <li>All study rooms will be available for reservation</li>
+                <li>Additional staff will be on duty to assist students</li>
+              </ul>
+              <div class="announcement-footer">
+                <span class="announcement-author">Posted by: Library Administration</span>
+                <button class="btn btn-link">Read More</button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Regular Announcement -->
+          <div class="announcement-item">
+            <div class="announcement-header">
+              <div class="announcement-meta">
+                <span class="announcement-category">General</span>
+                <span class="announcement-date">Sep 15, 2023</span>
+              </div>
+              <h3>New Books Added to Collection</h3>
+            </div>
+            <div class="announcement-content">
+              <p>We've added 50 new titles to our technology section. New additions include the latest editions of popular programming books and artificial intelligence resources.</p>
+              <div class="announcement-footer">
+                <span class="announcement-author">Posted by: Library Staff</span>
+                <button class="btn btn-link">Read More</button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Event Announcement -->
+          <div class="announcement-item">
+            <div class="announcement-header">
+              <div class="announcement-meta">
+                <span class="announcement-category">Events</span>
+                <span class="announcement-date">Sep 10, 2023</span>
+              </div>
+              <h3>Workshop: Research Paper Writing</h3>
+            </div>
+            <div class="announcement-content">
+              <p>Join us for a workshop on effective research paper writing. Learn proper citation methods, research techniques, and academic writing best practices.</p>
+              <div class="event-details">
+                <div class="event-info">
+                  <i class="fas fa-calendar"></i>
+                  <span>September 25, 2023</span>
+                </div>
+                <div class="event-info">
+                  <i class="fas fa-clock"></i>
+                  <span>2:00 PM - 4:00 PM</span>
+                </div>
+                <div class="event-info">
+                  <i class="fas fa-map-marker-alt"></i>
+                  <span>Library Conference Room</span>
+                </div>
+              </div>
+              <div class="announcement-footer">
+                <span class="announcement-author">Posted by: Research Department</span>
+                <button class="btn btn-primary">Register Now</button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Maintenance Announcement -->
+          <div class="announcement-item">
+            <div class="announcement-header">
+              <div class="announcement-meta">
+                <span class="announcement-category">Maintenance</span>
+                <span class="announcement-date">Sep 5, 2023</span>
+              </div>
+              <h3>System Maintenance Notice</h3>
+            </div>
+            <div class="announcement-content">
+              <p>The library management system will undergo scheduled maintenance this weekend. Online services will be temporarily unavailable.</p>
+              <div class="maintenance-schedule">
+                <p><strong>Date:</strong> September 23, 2023</p>
+                <p><strong>Time:</strong> 10:00 PM - 2:00 AM</p>
+                <p><strong>Services Affected:</strong> Online catalog, room reservations, and book requests</p>
+              </div>
+              <div class="announcement-footer">
+                <span class="announcement-author">Posted by: IT Department</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Pagination -->
+        <div class="pagination">
+          <button class="pagination-btn"><i class="fas fa-chevron-left"></i></button>
+          <button class="pagination-btn active">1</button>
+          <button class="pagination-btn">2</button>
+          <button class="pagination-btn">3</button>
+          <span class="pagination-ellipsis">...</span>
+          <button class="pagination-btn">10</button>
+          <button class="pagination-btn"><i class="fas fa-chevron-right"></i></button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../js/student.js"></script>
+</body>
+</html>

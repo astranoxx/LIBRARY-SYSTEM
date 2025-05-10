@@ -1,0 +1,142 @@
+/* Auth Specific Styles */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background: url('../assets/bg.png') no-repeat center center fixed;
+  background-size: cover;
+}
+
+
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.auth-card {
+  background-color: rgba(255, 255, 255, 0.8); /* light transparent white */
+  backdrop-filter: blur(6px); /* optional soft blur */
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-xl);
+  width: 100%;
+  max-width: 500px;
+  overflow: hidden;
+  animation: slideInUp var(--transition-normal) ease;
+}
+
+
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: var(--space-4);
+    
+}
+
+.auth-header {
+  text-align: center;
+  padding: var(--space-8) var(--space-6) var(--space-6);
+}
+
+.auth-logo {
+  width: 80px;
+  height: 80px;
+  margin-bottom: var(--space-4);
+}
+
+.auth-header h1 {
+  color: var(--primary-700);
+  font-size: 1.75rem;
+  margin-bottom: var(--space-2);
+}
+
+.auth-header p {
+  color: var(--neutral-600);
+  margin-bottom: 0;
+}
+
+.auth-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--neutral-200);
+}
+
+.auth-tab {
+  flex: 1;
+  padding: var(--space-3) 0;
+  font-weight: 600;
+  text-align: center;
+  color: var(--neutral-600);
+  background-color: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: all var(--transition-fast) ease;
+}
+
+.auth-tab:hover {
+  color: var(--primary-600);
+}
+
+.auth-tab.active {
+  color: var(--primary-600);
+  border-bottom-color: var(--primary-600);
+}
+
+.auth-content {
+  padding: var(--space-6);
+}
+
+.auth-form {
+  display: none;
+}
+
+.auth-form.active {
+  display: block;
+  animation: fadeIn var(--transition-normal) ease;
+}
+
+.name-fields {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-2);
+}
+
+.student-fields {
+  transition: max-height var(--transition-normal) ease, opacity var(--transition-normal) ease;
+  overflow: hidden;
+}
+
+.student-fields.hidden {
+  max-height: 0;
+  opacity: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.btn-block {
+  margin-top: var(--space-4);
+}
+
+/* Responsive adjustments */
+@media (max-width: 576px) {
+  .auth-card {
+    max-width: 100%;
+  }
+  
+  .name-fields {
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+  }
+  
+  .auth-header {
+    padding: var(--space-6) var(--space-4) var(--space-4);
+  }
+  
+  .auth-content {
+    padding: var(--space-4);
+  }
+}

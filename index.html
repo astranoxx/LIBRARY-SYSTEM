@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Library Management System</title>
+  <link rel="stylesheet" href="../css/main.css">
+  <link rel="stylesheet" href="../css/auth.css">
+</head>
+<body>
+  <div class="auth-container">
+    <div class="auth-card">
+      <div class="auth-header">
+        <img src="./assets/logo.png" alt="Library Logo" class="auth-logo">
+        <h1>Library Management System</h1>
+        <p>Access your digital library experience</p>
+      </div>
+      
+      <div class="auth-tabs">
+        <button class="auth-tab active" data-tab="login">Login</button>
+        <button class="auth-tab" data-tab="register">Register</button>
+      </div>
+      
+      <div class="auth-content">
+        <!-- Login Form -->
+        <div class="auth-form active" id="login-form">
+          <div class="form-group">
+            <label for="login-role">Role</label>
+            <select id="login-role" class="form-control">
+              <option value="" disabled selected>Select your role</option>
+              <option value="student">Student</option>
+              <option value="faculty">Faculty/Staff</option>
+              <option value="admin">Admin/Librarian</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="login-id">Student/Employee Number</label>
+            <input type="text" id="login-id" class="form-control" placeholder="Enter your ID number">
+          </div>
+          
+          <div class="form-group">
+            <label for="login-password">Password</label>
+            <input type="password" id="login-password" class="form-control" placeholder="Enter your password">
+          </div>
+          
+          <button type="button" class="btn btn-primary btn-block" id="login-btn">Login</button>
+        </div>
+        
+        <!-- Registration Form -->
+        <div class="auth-form" id="register-form">
+          <div class="form-group">
+            <label for="register-role">Role</label>
+            <select id="register-role" class="form-control">
+              <option value="" disabled selected>Select your role</option>
+              <option value="student">Student</option>
+              <option value="faculty">Faculty/Staff</option>
+              <option value="admin">Admin/Librarian</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label>Name</label>
+            <div class="name-fields">
+              <input type="text" id="register-lastname" class="form-control" placeholder="Last Name">
+              <input type="text" id="register-firstname" class="form-control" placeholder="First Name">
+              <input type="text" id="register-middlename" class="form-control" placeholder="Middle Name">
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="register-email">Email Address</label>
+            <input type="email" id="register-email" class="form-control" placeholder="Enter your email address">
+          </div>
+          
+          <!-- Student specific fields -->
+          <div class="form-group student-fields hidden">
+            <label for="register-course">Course</label>
+            <select id="register-year" class="form-control">
+              <option value="" disabled selected>Select year course</option>
+              <option value="1">Bachelor of Science in Entrepreneurship</option>
+              <option value="2">Bachelor of Science in Management Accounting</option>
+              <option value="3">Bachelor of Science in Industrial Engineering</option>
+              <option value="4">Bachelor of Science in Computer Engineering</option>
+              <option value="5">Bachelor of Science in Information Technology</option>
+              <option value="5">Bachelor of Science in Information System</option>
+              <option value="5">Bachelor of Science in Computer Science</option>
+
+
+            </select>
+          </div>
+          
+          <div class="form-group student-fields hidden">
+            <label for="register-year">Year Level</label>
+            <select id="register-year" class="form-control">
+              <option value="" disabled selected>Select year level</option>
+              <option value="1">1st Year</option>
+              <option value="2">2nd Year</option>
+              <option value="3">3rd Year</option>
+              <option value="4">4th Year</option>
+              <option value="5">5th Year</option>
+            </select>
+          </div>
+          
+          <div class="form-group student-fields hidden">
+            <label for="register-section">Section</label>
+            <input type="text" id="register-section" class="form-control" placeholder="Enter your section">
+          </div>
+          
+          <div class="form-group">
+            <label for="register-id">Student/Employee Number</label>
+            <input type="text" id="register-id" class="form-control" placeholder="Enter your ID number">
+          </div>
+          
+          <div class="form-group">
+            <label for="register-password">Password</label>
+            <input type="password" id="register-password" class="form-control" placeholder="Create a password">
+          </div>
+          
+          <div class="form-group">
+            <label for="register-confirm">Confirm Password</label>
+            <input type="password" id="register-confirm" class="form-control" placeholder="Confirm your password">
+          </div>
+          
+          <button type="button" class="btn btn-primary btn-block" id="register-btn">Register</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/auth.js"></script>
+</body>
+</html>

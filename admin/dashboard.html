@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - Library Management System</title>
+  <link rel="stylesheet" href="../css/main.css">
+  <link rel="stylesheet" href="../css/admin.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <img src="../assets/logo.png" alt="Library Logo" class="sidebar-logo">
+        <h3>Library System</h3>
+      </div>
+      
+      <nav class="sidebar-nav">
+        <ul>
+          <li class="active">
+            <a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+          </li>
+          <li>
+            <a href="manage-members.html"><i class="fas fa-users"></i> Manage Members</a>
+          </li>
+          <li>
+            <a href="manage-books.html"><i class="fas fa-book"></i> Manage Books</a>
+          </li>
+          <li>
+            <a href="book-requests.html"><i class="fas fa-book-reader"></i> Book Requests</a>
+          </li>
+          <li>
+            <a href="room-requests.html"><i class="fas fa-door-open"></i> Room Requests</a>
+          </li>
+          <li>
+            <a href="announcements.html"><i class="fas fa-bullhorn"></i> Announcements</a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Top Navigation -->
+      <header class="top-nav">
+        <div class="search-container">
+          <input type="text" placeholder="Search...">
+          <button type="button"><i class="fas fa-search"></i></button>
+        </div>
+        
+        <div class="user-menu">
+          <div class="notifications">
+            <button class="icon-btn"><i class="fas fa-bell"></i></button>
+          </div>
+          
+          <div class="profile-dropdown">
+            <button class="profile-toggle">
+              <img src="../assets/images/default-profile.png" alt="Profile" id="user-profile-img">
+              <span id="user-name">Admin User</span>
+              <i class="fas fa-chevron-down"></i>
+            </button>
+            
+            <div class="dropdown-menu">
+              <a href="#" id="edit-profile"><i class="fas fa-user-edit"></i> Edit Profile</a>
+              <a href="#" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+          </div>
+        </div>
+      </header>
+      
+      <!-- Content Area -->
+      <div class="content">
+        <h1 class="page-title">Admin Dashboard</h1>
+        
+        <!-- Dashboard Stats -->
+        <div class="stats-container">
+          <div class="stat-card">
+            <div class="stat-icon users-icon">
+              <i class="fas fa-users"></i>
+            </div>
+            <div class="stat-details">
+              <h3>1,245</h3>
+              <p>Registered Members</p>
+            </div>
+          </div>
+          
+          <div class="stat-card">
+            <div class="stat-icon books-icon">
+              <i class="fas fa-book"></i>
+            </div>
+            <div class="stat-details">
+              <h3>3,567</h3>
+              <p>Total Books</p>
+            </div>
+          </div>
+          
+          <div class="stat-card">
+            <div class="stat-icon borrowed-icon">
+              <i class="fas fa-book-reader"></i>
+            </div>
+            <div class="stat-details">
+              <h3>427</h3>
+              <p>Books Borrowed</p>
+            </div>
+          </div>
+          
+          <div class="stat-card">
+            <div class="stat-icon rooms-icon">
+              <i class="fas fa-door-open"></i>
+            </div>
+            <div class="stat-details">
+              <h3>85</h3>
+              <p>Room Reservations</p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+          <a href="manage-members.html" class="action-card">
+            <i class="fas fa-user-plus"></i>
+            <span>Add Member</span>
+          </a>
+          
+          <a href="manage-books.html" class="action-card">
+            <i class="fas fa-book-medical"></i>
+            <span>Add Book</span>
+          </a>
+          
+          <a href="book-requests.html" class="action-card">
+            <i class="fas fa-clipboard-check"></i>
+            <span>Review Requests</span>
+          </a>
+          
+          <a href="reports.html" class="action-card">
+            <i class="fas fa-file-export"></i>
+            <span>Generate Report</span>
+          </a>
+          
+          <a href="announcements.html" class="action-card">
+            <i class="fas fa-bullhorn"></i>
+            <span>Post Announcement</span>
+          </a>
+        </div>
+        
+        <!-- Pending Requests -->
+        <div class="card">
+          <div class="card-header">
+            <h2>Pending Requests</h2>
+            <div class="card-tabs">
+              <button class="card-tab active" data-tab="book-req">Books</button>
+              <button class="card-tab" data-tab="room-req">Rooms</button>
+            </div>
+          </div>
+          
+          <div class="card-body">
+            <!-- Book Requests Tab -->
+            <div class="tab-content active" id="book-req">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Member</th>
+                    <th>ID Number</th>
+                    <th>Book Title</th>
+                    <th>Request Date</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>John Smith</td>
+                    <td>2023-0001</td>
+                    <td>Introduction to Database Systems</td>
+                    <td>2023-09-15</td>
+                    <td>
+                      <button class="btn btn-success btn-sm">Approve</button>
+                      <button class="btn btn-danger btn-sm">Reject</button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Sarah Johnson</td>
+                    <td>2023-0042</td>
+                    <td>Artificial Intelligence: A Modern Approach</td>
+                    <td>2023-09-16</td>
+                    <td>
+                      <button class="btn btn-success btn-sm">Approve</button>
+                      <button class="btn btn-danger btn-sm">Reject</button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Michael Brown</td>
+                    <td>2023-0105</td>
+                    <td>Clean Code: A Handbook of Agile Software Craftsmanship</td>
+                    <td>2023-09-17</td>
+                    <td>
+                      <button class="btn btn-success btn-sm">Approve</button>
+                      <button class="btn btn-danger btn-sm">Reject</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            
+            <!-- Room Requests Tab -->
+            <div class="tab-content" id="room-req">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Member</th>
+                    <th>ID Number</th>
+                    <th>Room</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Purpose</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Emily Davis</td>
+                    <td>2023-0078</td>
+                    <td>Study Room 102</td>
+                    <td>2023-09-20</td>
+                    <td>13:00 - 15:00</td>
+                    <td>Group Study</td>
+                    <td>
+                      <button class="btn btn-success btn-sm">Approve</button>
+                      <button class="btn btn-danger btn-sm">Reject</button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>James Wilson</td>
+                    <td>2023-0156</td>
+                    <td>Computer Lab 201</td>
+                    <td>2023-09-21</td>
+                    <td>10:00 - 12:00</td>
+                    <td>Programming Workshop</td>
+                    <td>
+                      <button class="btn btn-success btn-sm">Approve</button>
+                      <button class="btn btn-danger btn-sm">Reject</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Recent Activity -->
+        <div class="card">
+          <div class="card-header">
+            <h2>Recent Activity</h2>
+            <a href="#" class="view-all">View All</a>
+          </div>
+          
+          <div class="card-body">
+            <div class="activity-list">
+              <div class="activity-item">
+                <div class="activity-icon">
+                  <i class="fas fa-book"></i>
+                </div>
+                <div class="activity-details">
+                  <p><strong>Michael Brown</strong> borrowed <strong>Clean Code</strong></p>
+                  <span class="activity-time">5 minutes ago</span>
+                </div>
+              </div>
+              
+              <div class="activity-item">
+                <div class="activity-icon">
+                  <i class="fas fa-door-open"></i>
+                </div>
+                <div class="activity-details">
+                  <p><strong>Sarah Johnson</strong> reserved <strong>Study Room 101</strong></p>
+                  <span class="activity-time">1 hour ago</span>
+                </div>
+              </div>
+              
+              <div class="activity-item">
+                <div class="activity-icon">
+                  <i class="fas fa-book-reader"></i>
+                </div>
+                <div class="activity-details">
+                  <p><strong>John Smith</strong> returned <strong>Introduction to Algorithms</strong></p>
+                  <span class="activity-time">3 hours ago</span>
+                </div>
+              </div>
+              
+              <div class="activity-item">
+                <div class="activity-icon">
+                  <i class="fas fa-user-plus"></i>
+                </div>
+                <div class="activity-details">
+                  <p><strong>Emily Davis</strong> registered as a new member</p>
+                  <span class="activity-time">Yesterday</span>
+                </div>
+              </div>
+              
+              <div class="activity-item">
+                <div class="activity-icon">
+                  <i class="fas fa-book-medical"></i>
+                </div>
+                <div class="activity-details">
+                  <p><strong>Admin User</strong> added 15 new books to inventory</p>
+                  <span class="activity-time">Yesterday</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../js/admin.js"></script>
+</body>
+</html>

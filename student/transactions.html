@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Transactions - Library Management System</title>
+  <link rel="stylesheet" href="../css/main.css">
+  <link rel="stylesheet" href="../css/student.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <img src="../assets/logo.png" alt="Library Logo" class="sidebar-logo">
+        <h3>Library System</h3>
+      </div>
+      
+      <nav class="sidebar-nav">
+        <ul>
+          <li>
+            <a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+          </li>
+          <li class="active">
+            <a href="transactions.html"><i class="fas fa-exchange-alt"></i> Transactions</a>
+          </li>
+          <li>
+            <a href="book-request.html"><i class="fas fa-book"></i> Book Request</a>
+          </li>
+          <li>
+            <a href="room-reservation.html"><i class="fas fa-door-open"></i> Room Reservation</a>
+          </li>
+          <li>
+            <a href="announcements.html"><i class="fas fa-bullhorn"></i> Announcements</a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Top Navigation -->
+      <header class="top-nav">
+        <div class="search-container">
+          <input type="text" placeholder="Search...">
+          <button type="button"><i class="fas fa-search"></i></button>
+        </div>
+        
+        <div class="user-menu">
+          <div class="notifications">
+            <button class="icon-btn"><i class="fas fa-bell"></i></button>
+          </div>
+          
+          <div class="profile-dropdown">
+            <button class="profile-toggle">
+              <img src="../assets/images/default-profile.png" alt="Profile" id="user-profile-img">
+              <span id="user-name">John Doe</span>
+              <i class="fas fa-chevron-down"></i>
+            </button>
+            
+            <div class="dropdown-menu">
+              <a href="#" id="edit-profile"><i class="fas fa-user-edit"></i> Edit Profile</a>
+              <a href="#" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+          </div>
+        </div>
+      </header>
+      
+      <!-- Content Area -->
+      <div class="content">
+        <h1 class="page-title">Transactions</h1>
+        
+        <!-- Transaction Tabs -->
+        <div class="tabs">
+          <button class="tab-btn active" data-tab="all">All</button>
+          <button class="tab-btn" data-tab="books">Books</button>
+          <button class="tab-btn" data-tab="rooms">Rooms</button>
+        </div>
+        
+        <!-- Transaction Table -->
+        <div class="card">
+          <div class="card-header">
+            <div class="filter-container">
+              <label for="status-filter">Status:</label>
+              <select id="status-filter" class="form-control sm">
+                <option value="all">All</option>
+                <option value="pending">Pending</option>
+                <option value="approved">Approved</option>
+                <option value="in-use">In Use</option>
+                <option value="returned">Returned</option>
+                <option value="rejected">Rejected</option>
+              </select>
+              
+              <label for="date-filter">Date:</label>
+              <input type="date" id="date-filter" class="form-control sm">
+              
+              <button class="btn btn-primary sm">Apply Filters</button>
+              <button class="btn btn-secondary sm">Reset</button>
+            </div>
+          </div>
+          
+          <div class="card-body">
+            <!-- All Transactions Tab -->
+            <div class="tab-content active" id="all-tab">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Type</th>
+                    <th>Title/Room</th>
+                    <th>Date</th>
+                    <th>Due Date</th>
+                    <th>Status</th>
+                    <th>Fine</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><span class="badge book-badge">Book</span></td>
+                    <td>Introduction to Database Systems</td>
+                    <td>2023-09-15</td>
+                    <td>2023-09-29</td>
+                    <td><span class="status-badge pending">Pending</span></td>
+                    <td>-</td>
+                    <td>
+                      <button class="btn-icon" title="View Details"><i class="fas fa-eye"></i></button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><span class="badge room-badge">Room</span></td>
+                    <td>Study Room 101</td>
+                    <td>2023-09-18</td>
+                    <td>2023-09-18</td>
+                    <td><span class="status-badge approved">Approved</span></td>
+                    <td>-</td>
+                    <td>
+                      <button class="btn-icon" title="View Details"><i class="fas fa-eye"></i></button>
+                      <button class="btn-icon" title="Edit"><i class="fas fa-edit"></i></button>
+                      <button class="btn-icon" title="Cancel"><i class="fas fa-times"></i></button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><span class="badge book-badge">Book</span></td>
+                    <td>Data Structures and Algorithms</td>
+                    <td>2023-09-10</td>
+                    <td>2023-09-24</td>
+                    <td><span class="status-badge in-use">In Use</span></td>
+                    <td>-</td>
+                    <td>
+                      <button class="btn-icon" title="View Details"><i class="fas fa-eye"></i></button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><span class="badge book-badge">Book</span></td>
+                    <td>Computer Networks</td>
+                    <td>2023-09-01</td>
+                    <td>2023-09-15</td>
+                    <td><span class="status-badge overdue">Overdue</span></td>
+                    <td>₱150.00</td>
+                    <td>
+                      <button class="btn-icon" title="View Details"><i class="fas fa-eye"></i></button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><span class="badge room-badge">Room</span></td>
+                    <td>Computer Lab 202</td>
+                    <td>2023-09-05</td>
+                    <td>2023-09-05</td>
+                    <td><span class="status-badge completed">Completed</span></td>
+                    <td>-</td>
+                    <td>
+                      <button class="btn-icon" title="View Details"><i class="fas fa-eye"></i></button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            
+            <!-- Books Tab -->
+            <div class="tab-content" id="books-tab">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Book Title</th>
+                    <th>Author</th>
+                    <th>Borrow Date</th>
+                    <th>Due Date</th>
+                    <th>Status</th>
+                    <th>Fine</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Introduction to Database Systems</td>
+                    <td>C. J. Date</td>
+                    <td>2023-09-15</td>
+                    <td>2023-09-29</td>
+                    <td><span class="status-badge pending">Pending</span></td>
+                    <td>-</td>
+                    <td>
+                      <button class="btn-icon" title="View Details"><i class="fas fa-eye"></i></button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Data Structures and Algorithms</td>
+                    <td>Robert Lafore</td>
+                    <td>2023-09-10</td>
+                    <td>2023-09-24</td>
+                    <td><span class="status-badge in-use">In Use</span></td>
+                    <td>-</td>
+                    <td>
+                      <button class="btn-icon" title="View Details"><i class="fas fa-eye"></i></button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Computer Networks</td>
+                    <td>Andrew S. Tanenbaum</td>
+                    <td>2023-09-01</td>
+                    <td>2023-09-15</td>
+                    <td><span class="status-badge overdue">Overdue</span></td>
+                    <td>₱150.00</td>
+                    <td>
+                      <button class="btn-icon" title="View Details"><i class="fas fa-eye"></i></button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            
+            <!-- Rooms Tab -->
+            <div class="tab-content" id="rooms-tab">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Room</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Purpose</th>
+                    <th>Members</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Study Room 101</td>
+                    <td>2023-09-18</td>
+                    <td>13:00 - 15:00</td>
+                    <td>Group Study</td>
+                    <td>4</td>
+                    <td><span class="status-badge approved">Approved</span></td>
+                    <td>
+                      <button class="btn-icon" title="View Details"><i class="fas fa-eye"></i></button>
+                      <button class="btn-icon" title="Edit"><i class="fas fa-edit"></i></button>
+                      <button class="btn-icon" title="Cancel"><i class="fas fa-times"></i></button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Computer Lab 202</td>
+                    <td>2023-09-05</td>
+                    <td>10:00 - 12:00</td>
+                    <td>Programming Session</td>
+                    <td>10</td>
+                    <td><span class="status-badge completed">Completed</span></td>
+                    <td>
+                      <button class="btn-icon" title="View Details"><i class="fas fa-eye"></i></button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    
+    <!-- Transaction Details Modal -->
+    <div class="modal" id="transaction-modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Transaction Details</h2>
+          <button class="close-modal">&times;</button>
+        </div>
+        
+        <div class="modal-body">
+          <div class="transaction-details">
+            <!-- Content will be dynamically populated -->
+          </div>
+        </div>
+        
+        <div class="modal-footer">
+          <button class="btn btn-secondary close-modal">Close</button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Member List Modal (for room reservations) -->
+    <div class="modal" id="member-list-modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Member List</h2>
+          <button class="close-modal">&times;</button>
+        </div>
+        
+        <div class="modal-body">
+          <div class="member-form">
+            <div class="form-group">
+              <label for="member-name">Member Name</label>
+              <input type="text" id="member-name" class="form-control" placeholder="Enter member's full name">
+            </div>
+            
+            <div class="form-group">
+              <label for="member-id">Student/Employee ID</label>
+              <input type="text" id="member-id" class="form-control" placeholder="Enter member's ID number">
+            </div>
+            
+            <button class="btn btn-primary" id="add-member">Add Member</button>
+          </div>
+          
+          <div class="member-list">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>ID Number</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="member-list-body">
+                <!-- Will be populated dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+        
+        <div class="modal-footer">
+          <button class="btn btn-secondary close-modal">Cancel</button>
+          <button class="btn btn-primary" id="save-members">Save Changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/student.js"></script>
+</body>
+</html>

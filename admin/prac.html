@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book Request - Library Management System</title>
+  <link rel="stylesheet" href="../../css/main.css">
+  <link rel="stylesheet" href="../../css/student.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <img src="../../assets/logo.png" alt="Library Logo" class="sidebar-logo">
+        <h3>Library System</h3>
+      </div>
+      
+      <nav class="sidebar-nav">
+        <ul>
+          <li>
+            <a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+          </li>
+          <li>
+            <a href="transactions.html"><i class="fas fa-exchange-alt"></i> Transactions</a>
+          </li>
+          <li class="active">
+            <a href="book-request.html"><i class="fas fa-book"></i> Book Request</a>
+          </li>
+          <li>
+            <a href="room-reservation.html"><i class="fas fa-door-open"></i> Room Reservation</a>
+          </li>
+          <li>
+            <a href="announcements.html"><i class="fas fa-bullhorn"></i> Announcements</a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Top Navigation -->
+      <header class="top-nav">
+        <div class="search-container">
+          <input type="text" placeholder="Search books...">
+          <button type="button"><i class="fas fa-search"></i></button>
+        </div>
+        
+        <div class="user-menu">
+          <div class="notifications">
+            <button class="icon-btn"><i class="fas fa-bell"></i></button>
+            <div class="notification-dropdown">
+              <div class="notification-header">
+                <h3>Notifications</h3>
+                <button class="mark-all-read">Mark all as read</button>
+              </div>
+              <div class="notification-list">
+                <div class="notification-item unread">
+                  <div class="notification-icon success">
+                    <i class="fas fa-check-circle"></i>
+                  </div>
+                  <div class="notification-content">
+                    <p>Your request for "Clean Code" has been approved!</p>
+                    <span class="notification-time">2 hours ago</span>
+                  </div>
+                </div>
+                <div class="notification-item">
+                  <div class="notification-icon info">
+                    <i class="fas fa-info-circle"></i>
+                  </div>
+                  <div class="notification-content">
+                    <p>Library will be closed this Saturday for maintenance.</p>
+                    <span class="notification-time">1 day ago</span>
+                  </div>
+                </div>
+              </div>
+              <div class="notification-footer">
+                <a href="notifications.html">View all notifications</a>
+              </div>
+            </div>
+          </div>
+          
+          <div class="profile-dropdown">
+            <button class="profile-toggle">
+              <img src="../../assets/images/default-profile.png" alt="Profile" id="user-profile-img">
+              <span id="user-name">Fatima Briones</span>
+              <i class="fas fa-chevron-down"></i>
+            </button>
+            
+            <div class="dropdown-menu">
+              <a href="#" id="edit-profile"><i class="fas fa-user-edit"></i> Edit Profile</a>
+              <a href="#" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+          </div>
+        </div>
+      </header>
+      
+      <!-- Content Area -->
+      <div class="content">
+        <h1 class="page-title">Book Request</h1>
+        
+        <!-- Category Filters -->
+        <div class="filters-container">
+          <div class="category-filter">
+            <button class="category-btn active" data-category="all">All</button>
+            <button class="category-btn" data-category="physical">Physical Books</button>
+            <button class="category-btn" data-category="ebook">E-Books</button>
+          </div>
+          
+          <div class="location-filter">
+            <button class="location-btn active" data-location="all">All Locations</button>
+            <button class="location-btn" data-location="san-bartolome">San Bartolome</button>
+            <button class="location-btn" data-location="san-francisco">San Francisco</button>
+            <button class="location-btn" data-location="batasan">Batasan</button>
+          </div>
+          
+          <div class="subject-filter">
+            <select class="form-control" id="subject-select">
+              <option value="all">All Subjects</option>
+              <option value="computer-science">Computer Science</option>
+              <option value="mathematics">Mathematics</option>
+              <option value="engineering">Engineering</option>
+              <option value="literature">Literature</option>
+              <option value="science">Science</option>
+            </select>
+          </div>
+        </div>
+        
+        <!-- Book Grid -->
+        <div class="book-grid">
+          <!-- Physical Book Card -->
+          <div class="book-card" data-category="physical" data-location="san-bartolome" data-subject="computer-science">
+            <div class="book-cover">
+              <img src="https://covers.openlibrary.org/b/id/8091016-L.jpg" alt="Book Cover">
+              <div class="book-status low-stock">
+                Low Stock: 3 copies
+              </div>
+              <div class="book-type">
+                <i class="fas fa-book" title="Physical Book"></i>
+              </div>
+            </div>
+            <div class="book-info">
+              <h3>Introduction to Algorithms</h3>
+              <p class="book-author">Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest</p>
+              <p class="book-details">
+                <span class="book-category">Computer Science</span>
+                <span class="book-location">San Bartolome</span>
+              </p>
+              <button class="btn btn-primary btn-block request-btn" data-book-id="1" data-book-title="Introduction to Algorithms" data-book-author="Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest" data-book-cover="https://covers.openlibrary.org/b/id/8091016-L.jpg" data-book-type="physical">Request Book</button>
+            </div>
+          </div>
+          
+          <!-- E-Book Card (Same Content) -->
+          <div class="book-card" data-category="ebook" data-location="all" data-subject="computer-science">
+            <div class="book-cover">
+              <img src="https://covers.openlibrary.org/b/id/8091016-L.jpg" alt="Book Cover">
+              <div class="book-status available">
+                Available for Request
+              </div>
+              <div class="book-type">
+                <i class="fas fa-tablet-alt" title="E-Book"></i>
+              </div>
+            </div>
+            <div class="book-info">
+              <h3>Introduction to Algorithms</h3>
+              <p class="book-author">Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest</p>
+              <p class="book-details">
+                <span class="book-category">Computer Science</span>
+                <span class="book-format">E-Book</span>
+              </p>
+              <button class="btn btn-primary btn-block request-btn" data-book-id="1e" data-book-title="Introduction to Algorithms" data-book-author="Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest" data-book-cover="https://covers.openlibrary.org/b/id/8091016-L.jpg" data-book-type="ebook">Request E-Book</button>
+            </div>
+          </div>
+          
+          <!-- Physical Book Card -->
+          <div class="book-card" data-category="physical" data-location="san-francisco" data-subject="computer-science">
+            <div class="book-cover">
+              <img src="https://covers.openlibrary.org/b/id/8522667-L.jpg" alt="Book Cover">
+              <div class="book-status available">
+                Available: 15 copies
+              </div>
+              <div class="book-type">
+                <i class="fas fa-book" title="Physical Book"></i>
+              </div>
+            </div>
+            <div class="book-info">
+              <h3>Clean Code</h3>
+              <p class="book-author">Robert C. Martin</p>
+              <p class="book-details">
+                <span class="book-category">Computer Science</span>
+                <span class="book-location">San Francisco</span>
+              </p>
+              <button class="btn btn-primary btn-block request-btn" data-book-id="2" data-book-title="Clean Code" data-book-author="Robert C. Martin" data-book-cover="https://covers.openlibrary.org/b/id/8522667-L.jpg" data-book-type="physical">Request Book</button>
+            </div>
+          </div>
+          
+          <!-- E-Book Card (Same Content) -->
+          <div class="book-card" data-category="ebook" data-location="all" data-subject="computer-science">
+            <div class="book-cover">
+              <img src="https://covers.openlibrary.org/b/id/8522667-L.jpg" alt="Book Cover">
+              <div class="book-status available">
+                Available for Request
+              </div>
+              <div class="book-type">
+                <i class="fas fa-tablet-alt" title="E-Book"></i>
+              </div>
+            </div>
+            <div class="book-info">
+              <h3>Clean Code</h3>
+              <p class="book-author">Robert C. Martin</p>
+              <p class="book-details">
+                <span class="book-category">Computer Science</span>
+                <span class="book-format">E-Book</span>
+              </p>
+              <button class="btn btn-primary btn-block request-btn" data-book-id="2e" data-book-title="Clean Code" data-book-author="Robert C. Martin" data-book-cover="https://covers.openlibrary.org/b/id/8522667-L.jpg" data-book-type="ebook">Request E-Book</button>
+            </div>
+          </div>
+          
+          <!-- Physical Book Card (Out of Stock) -->
+          <div class="book-card" data-category="physical" data-location="batasan" data-subject="computer-science">
+            <div class="book-cover">
+              <img src="https://covers.openlibrary.org/b/id/8051880-L.jpg" alt="Book Cover">
+              <div class="book-status out-of-stock">
+                Out of Stock
+              </div>
+              <div class="book-type">
+                <i class="fas fa-book" title="Physical Book"></i>
+              </div>
+            </div>
+            <div class="book-info">
+              <h3>Artificial Intelligence: A Modern Approach</h3>
+              <p class="book-author">Stuart Russell, Peter Norvig</p>
+              <p class="book-details">
+                <span class="book-category">Computer Science</span>
+                <span class="book-location">Batasan</span>
+              </p>
+              <button class="btn btn-secondary btn-block" disabled>Request Book</button>
+            </div>
+          </div>
+          
+          <!-- E-Book Card (Same Content) -->
+          <div class="book-card" data-category="ebook" data-location="all" data-subject="computer-science">
+            <div class="book-cover">
+              <img src="https://covers.openlibrary.org/b/id/8051880-L.jpg" alt="Book Cover">
+              <div class="book-status available">
+                Available for Request
+              </div>
+              <div class="book-type">
+                <i class="fas fa-tablet-alt" title="E-Book"></i>
+              </div>
+            </div>
+            <div class="book-info">
+              <h3>Artificial Intelligence: A Modern Approach</h3>
+              <p class="book-author">Stuart Russell, Peter Norvig</p>
+              <p class="book-details">
+                <span class="book-category">Computer Science</span>
+                <span class="book-format">E-Book</span>
+              </p>
+              <button class="btn btn-primary btn-block request-btn" data-book-id="3e" data-book-title="Artificial Intelligence: A Modern Approach" data-book-author="Stuart Russell, Peter Norvig" data-book-cover="https://covers.openlibrary.org/b/id/8051880-L.jpg" data-book-type="ebook">Request E-Book</button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Pagination -->
+        <div class="pagination">
+          <button class="pagination-btn"><i class="fas fa-chevron-left"></i></button>
+          <button class="pagination-btn active">1</button>
+          <button class="pagination-btn">2</button>
+          <button class="pagination-btn">3</button>
+          <span class="pagination-ellipsis">...</span>
+          <button class="pagination-btn">10</button>
+          <button class="pagination-btn"><i class="fas fa-chevron-right"></i></button>
+        </div>
+      </div>
+    </main>
+    
+    <!-- Book Request Modal -->
+    <div class="modal" id="request-modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 id="modal-request-title">Request Book</h2>
+          <button class="close-modal">&times;</button>
+        </div>
+        
+        <div class="modal-body">
+          <div class="book-preview">
+            <img src="" alt="Book Cover" id="modal-book-cover">
+            <div class="book-details">
+              <h3 id="modal-book-title"></h3>
+              <p id="modal-book-author"></p>
+              <p id="modal-book-type" class="book-type-label"></p>
+            </div>
+          </div>
+          
+          <div class="form-group" id="pickup-date-container">
+            <label for="pickup-date">Preferred Pickup Date</label>
+            <input type="date" id="pickup-date" class="form-control">
+            <p class="help-text">For physical books, please select a date to pick up your book.</p>
+          </div>
+          
+          <div class="form-group">
+            <label for="email-confirm">Confirm Email for Notifications</label>
+            <input type="email" id="email-confirm" class="form-control" value="fatima.briones@example.edu">
+            <p class="help-text">We'll send you a confirmation when your request is processed. For e-books, a download link will be sent to this email.</p>
+          </div>
+          
+          <div class="form-group">
+            <label for="request-notes">Notes (Optional)</label>
+            <textarea id="request-notes" class="form-control" rows="3" placeholder="Any special requests or notes"></textarea>
+          </div>
+          
+          <div class="agreement-checkbox">
+            <input type="checkbox" id="terms-agreement">
+            <label for="terms-agreement">I understand that all materials are for borrowing purposes only and may not be reproduced or distributed.</label>
+          </div>
+        </div>
+        
+        <div class="modal-footer">
+          <button class="btn btn-secondary close-modal">Cancel</button>
+          <button class="btn btn-primary" id="confirm-request" disabled>Submit Request</button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Success Modal -->
+    <div class="modal" id="success-modal">
+      <div class="modal-content">
+        <div class="modal-header success">
+          <h2>Request Submitted!</h2>
+          <button class="close-modal">&times;</button>
+        </div>
+        
+        <div class="modal-body text-center">
+          <div class="success-icon">
+            <i class="fas fa-check-circle"></i>
+          </div>
+          <h3>Your request has been submitted successfully!</h3>
+          <p>We will notify you via email once your request has been processed.</p>
+          <p id="success-message"></p>
+        </div>
+        
+        <div class="modal-footer">
+          <button class="btn btn-success close-modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../../js/student.js"></script>
+</body>
+</html>

@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Dashboard - Library Management System</title>
+  <link rel="stylesheet" href="../css/main.css">
+  <link rel="stylesheet" href="../css/student.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <img src="../assets/logo.png" alt="Library Logo" class="sidebar-logo">
+        <h3>Library System</h3>
+      </div>
+      
+      <nav class="sidebar-nav">
+        <ul>
+          <li class="active">
+            <a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+          </li>
+          <li>
+            <a href="transactions.html"><i class="fas fa-exchange-alt"></i> Transactions</a>
+          </li>
+          <li>
+            <a href="book-request.html"><i class="fas fa-book"></i> Book Request</a>
+          </li>
+          <li>
+            <a href="room-reservation.html"><i class="fas fa-door-open"></i> Room Reservation</a>
+          </li>
+          <li>
+            <a href="announcements.html"><i class="fas fa-bullhorn"></i> Announcements</a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Top Navigation -->
+      <header class="top-nav">
+        <div class="search-container">
+          <input type="text" placeholder="Search...">
+          <button type="button"><i class="fas fa-search"></i></button>
+        </div>
+        
+        <div class="user-menu">
+          <div class="notifications">
+            <button class="icon-btn"><i class="fas fa-bell"></i></button>
+          </div>
+          
+          <div class="profile-dropdown">
+            <button class="profile-toggle">
+              <img src="../assets/images/default-profile.png" alt="Profile" id="user-profile-img">
+              <span id="user-name">Name</span>
+              <i class="fas fa-chevron-down"></i>
+            </button>
+            
+            <div class="dropdown-menu">
+              <a href="#" id="edit-profile"><i class="fas fa-user-edit"></i> Edit Profile</a>
+              <a href="#" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+          </div>
+        </div>
+      </header>
+      
+      <!-- Content Area -->
+      <div class="content">
+        <h1 class="page-title">Dashboard</h1>
+        
+        <!-- Quick Stats -->
+        <div class="stats-container">
+          <div class="stat-card">
+            <div class="stat-icon books-icon">
+              <i class="fas fa-book"></i>
+            </div>
+            <div class="stat-details">
+              <h3>2</h3>
+              <p>Books Borrowed</p>
+            </div>
+          </div>
+          
+          <div class="stat-card">
+            <div class="stat-icon rooms-icon">
+              <i class="fas fa-door-open"></i>
+            </div>
+            <div class="stat-details">
+              <h3>1</h3>
+              <p>Room Reservations</p>
+            </div>
+          </div>
+          
+          <div class="stat-card">
+            <div class="stat-icon pending-icon">
+              <i class="fas fa-clock"></i>
+            </div>
+            <div class="stat-details">
+              <h3>3</h3>
+              <p>Pending Requests</p>
+            </div>
+          </div>
+          
+          <div class="stat-card">
+            <div class="stat-icon fine-icon">
+              <i class="fas fa-money-bill-wave"></i>
+            </div>
+            <div class="stat-details">
+              <h3>₱0.00</h3>
+              <p>Current Fines</p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Recent Transactions -->
+        <div class="card">
+          <div class="card-header">
+            <h2>Recent Transactions</h2>
+            <a href="transactions.html" class="view-all">View All</a>
+          </div>
+          
+          <div class="card-body">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Type</th>
+                  <th>Title/Room</th>
+                  <th>Date</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span class="badge book-badge">Book</span></td>
+                  <td>Introduction to Database Systems</td>
+                  <td>2023-09-15</td>
+                  <td><span class="status-badge pending">Pending</span></td>
+                  <td>
+                    <button class="btn-icon" title="View Details"><i class="fas fa-eye"></i></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td><span class="badge room-badge">Room</span></td>
+                  <td>Study Room 101</td>
+                  <td>2023-09-18</td>
+                  <td><span class="status-badge approved">Approved</span></td>
+                  <td>
+                    <button class="btn-icon" title="View Details"><i class="fas fa-eye"></i></button>
+                    <button class="btn-icon" title="Edit"><i class="fas fa-edit"></i></button>
+                    <button class="btn-icon" title="Cancel"><i class="fas fa-times"></i></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td><span class="badge book-badge">Book</span></td>
+                  <td>Data Structures and Algorithms</td>
+                  <td>2023-09-10</td>
+                  <td><span class="status-badge in-use">In Use</span></td>
+                  <td>
+                    <button class="btn-icon" title="View Details"><i class="fas fa-eye"></i></button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        
+        <!-- Announcements Preview -->
+        <div class="card">
+          <div class="card-header">
+            <h2>Latest Announcements</h2>
+            <a href="announcements.html" class="view-all">View All</a>
+          </div>
+          
+          <div class="card-body">
+            <div class="announcement-list">
+              <div class="announcement-item">
+                <div class="announcement-date">Sep 20, 2023</div>
+                <h3>Library Hours Extended During Finals Week</h3>
+                <p>The library will remain open until midnight from October 1-15 to accommodate students during finals week. All services will be available during extended hours.</p>
+              </div>
+              
+              <div class="announcement-item">
+                <div class="announcement-date">Sep 15, 2023</div>
+                <h3>New Books Added to Collection</h3>
+                <p>We've added 50 new titles to our technology section. Come check them out!</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    
+    <!-- Profile Edit Modal -->
+    <div class="modal" id="profile-modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Edit Profile</h2>
+          <button class="close-modal">&times;</button>
+        </div>
+        
+        <div class="modal-body">
+          <div class="profile-photo-container">
+            <img src="../assets/images/default-profile.png" alt="Profile Photo" id="profile-preview">
+            <div class="photo-upload">
+              <label for="profile-photo" class="btn btn-secondary">Change Photo</label>
+              <input type="file" id="profile-photo" accept="image/*" hidden>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label>Student/Employee Number</label>
+            <input type="text" id="profile-id" class="form-control" disabled>
+          </div>
+          
+          <div class="form-group">
+            <label>Name</label>
+            <div class="name-fields">
+              <input type="text" id="profile-lastname" class="form-control" placeholder="Last Name">
+              <input type="text" id="profile-firstname" class="form-control" placeholder="First Name">
+              <input type="text" id="profile-middlename" class="form-control" placeholder="Middle Name">
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="profile-email">Email Address</label>
+            <input type="email" id="profile-email" class="form-control">
+          </div>
+          
+          <div class="form-group">
+            <label for="profile-current-password">Current Password</label>
+            <input type="password" id="profile-current-password" class="form-control" placeholder="Enter current password to confirm changes">
+          </div>
+          
+          <div class="form-group">
+            <label for="profile-new-password">New Password (Optional)</label>
+            <input type="password" id="profile-new-password" class="form-control" placeholder="Leave blank to keep current password">
+          </div>
+        </div>
+        
+        <div class="modal-footer">
+          <button class="btn btn-secondary" id="cancel-profile-edit">Cancel</button>
+          <button class="btn btn-primary" id="save-profile">Save Changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/student.js"></script>
+</body>
+</html>

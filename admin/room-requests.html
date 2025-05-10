@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book Requests - Library Management System</title>
+  <link rel="stylesheet" href="../css/main.css">
+  <link rel="stylesheet" href="../css/admin.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <img src="../assets/logo.png" alt="Library Logo" class="sidebar-logo">
+        <h3>Library System</h3>
+      </div>
+      
+      <nav class="sidebar-nav">
+        <ul>
+          <li>
+            <a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+          </li>
+          <li>
+            <a href="manage-members.html"><i class="fas fa-users"></i> Manage Members</a>
+          </li>
+          <li>
+            <a href="manage-books.html"><i class="fas fa-book"></i> Manage Books</a>
+          </li>
+          <li>
+            <a href="book-requests.html"><i class="fas fa-book-reader"></i> Book Requests</a>
+          </li>
+          <li class="active">
+            <a href="room-requests.html"><i class="fas fa-door-open"></i> Room Requests</a>
+          </li>
+          <li>
+            <a href="announcements.html"><i class="fas fa-bullhorn"></i> Announcements</a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Top Navigation -->
+      <header class="top-nav">
+        <div class="search-container">
+          <input type="text" placeholder="Search requests...">
+          <button type="button"><i class="fas fa-search"></i></button>
+        </div>
+        
+        <div class="user-menu">
+          <div class="notifications">
+            <button class="icon-btn"><i class="fas fa-bell"></i></button>
+          </div>
+          
+          <div class="profile-dropdown">
+            <button class="profile-toggle">
+              <img src="../assets/images/default-profile.png" alt="Profile" id="user-profile-img">
+              <span id="user-name">Admin User</span>
+              <i class="fas fa-chevron-down"></i>
+            </button>
+            
+            <div class="dropdown-menu">
+              <a href="#" id="edit-profile"><i class="fas fa-user-edit"></i> Edit Profile</a>
+              <a href="#" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+          </div>
+        </div>
+      </header>
+      
+      <!-- Content Area -->
+      <div class="content">
+        <h1 class="page-title">Room Requests</h1>
+        
+        <!-- Filter and Search -->
+        <div class="card">
+          <div class="card-header">
+          
+              
+              <label for="date-filter">Date:</label>
+              <input type="date" id="date-filter" class="form-control sm">
+              
+              <button class="btn btn-primary sm">Apply Filters</button>
+              <button class="btn btn-secondary sm">Reset</button>
+            </div>
+          </div>
+          
+          <div class="card-body">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Request ID</th>
+                  <th>Student/Employee</th>
+                  <th>ROOM</th>
+                  <th>Request Date</th>
+                  <th>Date</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>REQ-2023-001</td>
+                  <td>
+                    <div class="user-info">
+                      <img src="../assets/images/default-profile.png" alt="User" class="user-avatar">
+                      <div>
+                        <div class="user-name">PANGET MO</div>
+                        <div class="user-id">2023-0001</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>-</td>
+                  <td>2023-09-15</td>
+                  <td>1:00-2:00PM</td>
+                  <td><span class="status-badge pending">Pending</span></td>
+                  <td>
+                    <button class="btn-icon" title="View Details"><i class="fas fa-eye"></i></button>
+                    <button class="btn btn-success btn-sm">Approve</button>
+                    <button class="btn btn-danger btn-sm">Reject</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>REQ-2023-002</td>
+                  <td>
+                    <div class="user-info">
+                      <img src="../assets/images/default-profile.png" alt="User" class="user-avatar">
+                      <div>
+                        <div class="user-name">Sarah Johnson</div>
+                        <div class="user-id">2023-0042</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>-</td>
+                  <td>2023-09-16</td>
+                  <td>9:00-10:00AM</td>
+                  <td><span class="status-badge pending">Pending</span></td>
+                  <td>
+                    <button class="btn-icon" title="View Details"><i class="fas fa-eye"></i></button>
+                    <button class="btn btn-success btn-sm">Approve</button>
+                    <button class="btn btn-danger btn-sm">Reject</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>REQ-2023-003</td>
+                  <td>
+                    <div class="user-info">
+                      <img src="../assets/images/default-profile.png" alt="User" class="user-avatar">
+                      <div>
+                        <div class="user-name">Michael Brown</div>
+                        <div class="user-id">2023-0105</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>-</td>
+                  <td>2023-09-17</td>
+                  <td>12:00-1:00pm</td>
+                  <td><span class="status-badge approved">Approved</span></td>
+                  <td>
+                    <button class="btn-icon" title="View Details"><i class="fas fa-eye"></i></button>
+                    <button class="btn btn-primary btn-sm">Mark as Approved</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            
+            <div class="pagination">
+              <button class="pagination-btn"><i class="fas fa-chevron-left"></i></button>
+              <button class="pagination-btn active">1</button>
+              <button class="pagination-btn">2</button>
+              <button class="pagination-btn">3</button>
+              <span class="pagination-ellipsis">...</span>
+              <button class="pagination-btn">10</button>
+              <button class="pagination-btn"><i class="fas fa-chevron-right"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    
+    <!-- Request Details Modal -->
+    <div class="modal" id="request-modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Request Details</h2>
+          <button class="close-modal">&times;</button>
+        </div>
+        
+        <div class="modal-body">
+          <div class="request-details">
+            <div class="detail-section">
+              <h3>Student Information</h3>
+              <div class="detail-grid">
+                <div class="detail-item">
+                  <label>Name:</label>
+                  <span id="student-name">John Smith</span>
+                </div>
+                <div class="detail-item">
+                  <label>ID Number:</label>
+                  <span id="student-id">2023-0001</span>
+                </div>
+                <div class="detail-item">
+                  <label>Course:</label>
+                  <span id="student-course">BS Computer Science</span>
+                </div>
+                <div class="detail-item">
+                  <label>Year Level:</label>
+                  <span id="student-year">3rd Year</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="detail-section">
+              <h3>Book Information</h3>
+              <div class="detail-grid">
+                <div class="detail-item">
+                  <label>Title:</label>
+                  <span id="book-title">Introduction to Database Systems</span>
+                </div>
+                <div class="detail-item">
+                  <label>Author:</label>
+                  <span id="book-author">C. J. Date</span>
+                </div>
+                <div class="detail-item">
+                  <label>ISBN:</label>
+                  <span id="book-isbn">9780321197849</span>
+                </div>
+                <div class="detail-item">
+                  <label>Location:</label>
+                  <span id="book-location">San Bartolome</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="detail-section">
+              <h3>Request Information</h3>
+              <div class="detail-grid">
+                <div class="detail-item">
+                  <label>Request Date:</label>
+                  <span id="request-date">2023-09-15</span>
+                </div>
+                <div class="detail-item">
+                  <label>Pickup Date:</label>
+                  <span id="pickup-date">2023-09-18</span>
+                </div>
+                <div class="detail-item">
+                  <label>Status:</label>
+                  <span id="request-status" class="status-badge pending">Pending</span>
+                </div>
+                <div class="detail-item full-width">
+                  <label>Notes:</label>
+                  <p id="request-notes">Need this book for my database management course project.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="modal-footer">
+          <button class="btn btn-secondary close-modal">Close</button>
+          <div class="action-buttons">
+            <button class="btn btn-success" id="approve-request">Approve</button>
+            <button class="btn btn-danger" id="reject-request">Reject</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Books - Library Management System</title>
+  <link rel="stylesheet" href="../css/main.css">
+  <link rel="stylesheet" href="../css/admin.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <img src="../assets/logo.png" alt="Library Logo" class="sidebar-logo">
+        <h3>Library System</h3>
+      </div>
+      
+      <nav class="sidebar-nav">
+        <ul>
+          <li>
+            <a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+          </li>
+          <li>
+            <a href="manage-members.html"><i class="fas fa-users"></i> Manage Members</a>
+          </li>
+          <li class="active">
+            <a href="manage-books.html"><i class="fas fa-book"></i> Manage Books</a>
+          </li>
+          <li>
+            <a href="book-requests.html"><i class="fas fa-book-reader"></i> Book Requests</a>
+          </li>
+          <li>
+            <a href="room-requests.html"><i class="fas fa-door-open"></i> Room Requests</a>
+          </li>
+          <li>
+            <a href="announcements.html"><i class="fas fa-bullhorn"></i> Announcements</a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Top Navigation -->
+      <header class="top-nav">
+        <div class="search-container">
+          <input type="text" placeholder="Search...">
+          <button type="button"><i class="fas fa-search"></i></button>
+        </div>
+        
+        <div class="user-menu">
+          <div class="notifications">
+            <button class="icon-btn"><i class="fas fa-bell"></i></button>
+          </div>
+          
+          <div class="profile-dropdown">
+            <button class="profile-toggle">
+              <img src="../assets/images/default-profile.png" alt="Profile" id="user-profile-img">
+              <span id="user-name">Admin User</span>
+              <i class="fas fa-chevron-down"></i>
+            </button>
+            
+            <div class="dropdown-menu">
+              <a href="#" id="edit-profile"><i class="fas fa-user-edit"></i> Edit Profile</a>
+              <a href="#" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+          </div>
+        </div>
+      </header>
+      
+      <!-- Content Area -->
+      <div class="content">
+        <div class="content-header">
+          <h1 class="page-title">Manage Books</h1>
+          <button class="btn btn-primary" id="add-book-btn">
+            <i class="fas fa-plus"></i> Add New Book
+          </button>
+        </div>
+        
+        <!-- Book Categories -->
+        <div class="category-filter">
+          <button class="category-btn active" data-category="all">All</button>
+          <button class="category-btn" data-category="san-bartolome">San Bartolome</button>
+          <button class="category-btn" data-category="san-francisco">San Francisco</button>
+          <button class="category-btn" data-category="batasan">Batasan</button>
+        </div>
+        
+        <!-- Filter and Search -->
+        <div class="card">
+          <div class="card-header">
+            <div class="filter-container">
+              <label for="subject-filter">Subject:</label>
+              <select id="subject-filter" class="form-control sm">
+                <option value="all">All Subjects</option>
+                <option value="computer-science">Computer Science</option>
+                <option value="engineering">Engineering</option>
+                <option value="mathematics">Mathematics</option>
+                <option value="science">Science</option>
+                <option value="humanities">Humanities</option>
+              </select>
+              
+              <label for="availability-filter">Availability:</label>
+              <select id="availability-filter" class="form-control sm">
+                <option value="all">All</option>
+                <option value="available">Available</option>
+                <option value="low-stock">Low Stock</option>
+                <option value="out-of-stock">Out of Stock</option>
+              </select>
+              
+              <button class="btn btn-primary sm">Apply Filters</button>
+              <button class="btn btn-secondary sm">Reset</button>
+            </div>
+          </div>
+          
+          <div class="card-body">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Image</th>
+                  <th>Title</th>
+                  <th>Author</th>
+                  <th>ISBN</th>
+                  <th>Subject</th>
+                  <th>Location</th>
+                  <th>Stock</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <img src="https://covers.openlibrary.org/b/id/8091016-S.jpg" alt="Book Cover" class="book-thumbnail">
+                  </td>
+                  <td>Introduction to Algorithms</td>
+                  <td>Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest, Clifford Stein</td>
+                  <td>9780262033848</td>
+                  <td>Computer Science</td>
+                  <td>San Bartolome</td>
+                  <td><span class="stock-badge good">15</span></td>
+                  <td>
+                    <button class="btn-icon" title="View Details"><i class="fas fa-eye"></i></button>
+                    <button class="btn-icon" title="Edit"><i class="fas fa-edit"></i></button>
+                    <button class="btn-icon" title="Delete"><i class="fas fa-trash"></i></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <img src="https://covers.openlibrary.org/b/id/8522667-S.jpg" alt="Book Cover" class="book-thumbnail">
+                  </td>
+                  <td>Clean Code: A Handbook of Agile Software Craftsmanship</td>
+                  <td>Robert C. Martin</td>
+                  <td>9780132350884</td>
+                  <td>Computer Science</td>
+                  <td>San Francisco</td>
+                  <td><span class="stock-badge low">3</span></td>
+                  <td>
+                    <button class="btn-icon" title="View Details"><i class="fas fa-eye"></i></button>
+                    <button class="btn-icon" title="Edit"><i class="fas fa-edit"></i></button>
+                    <button class="btn-icon" title="Delete"><i class="fas fa-trash"></i></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <img src="https://covers.openlibrary.org/b/id/8051880-S.jpg" alt="Book Cover" class="book-thumbnail">
+                  </td>
+                  <td>Artificial Intelligence: A Modern Approach</td>
+                  <td>Stuart Russell, Peter Norvig</td>
+                  <td>9780134610993</td>
+                  <td>Computer Science</td>
+                  <td>Batasan</td>
+                  <td><span class="stock-badge out">0</span></td>
+                  <td>
+                    <button class="btn-icon" title="View Details"><i class="fas fa-eye"></i></button>
+                    <button class="btn-icon" title="Edit"><i class="fas fa-edit"></i></button>
+                    <button class="btn-icon" title="Delete"><i class="fas fa-trash"></i></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <img src="https://covers.openlibrary.org/b/id/8059570-S.jpg" alt="Book Cover" class="book-thumbnail">
+                  </td>
+                  <td>Database System Concepts</td>
+                  <td>Abraham Silberschatz, Henry F. Korth, S. Sudarshan</td>
+                  <td>9780073523323</td>
+                  <td>Computer Science</td>
+                  <td>San Bartolome</td>
+                  <td><span class="stock-badge good">12</span></td>
+                  <td>
+                    <button class="btn-icon" title="View Details"><i class="fas fa-eye"></i></button>
+                    <button class="btn-icon" title="Edit"><i class="fas fa-edit"></i></button>
+                    <button class="btn-icon" title="Delete"><i class="fas fa-trash"></i></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <img src="https://covers.openlibrary.org/b/id/10701936-S.jpg" alt="Book Cover" class="book-thumbnail">
+                  </td>
+                  <td>Calculus: Early Transcendentals</td>
+                  <td>James Stewart</td>
+                  <td>9781285741550</td>
+                  <td>Mathematics</td>
+                  <td>San Francisco</td>
+                  <td><span class="stock-badge good">20</span></td>
+                  <td>
+                    <button class="btn-icon" title="View Details"><i class="fas fa-eye"></i></button>
+                    <button class="btn-icon" title="Edit"><i class="fas fa-edit"></i></button>
+                    <button class="btn-icon" title="Delete"><i class="fas fa-trash"></i></button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            
+            <div class="pagination">
+              <button class="pagination-btn"><i class="fas fa-chevron-left"></i></button>
+              <button class="pagination-btn active">1</button>
+              <button class="pagination-btn">2</button>
+              <button class="pagination-btn">3</button>
+              <span class="pagination-ellipsis">...</span>
+              <button class="pagination-btn">10</button>
+              <button class="pagination-btn"><i class="fas fa-chevron-right"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    
+    <!-- Add/Edit Book Modal -->
+    <div class="modal" id="book-modal">
+      <div class="modal-content large">
+        <div class="modal-header">
+          <h2 id="book-modal-title">Add New Book</h2>
+          <button class="close-modal">&times;</button>
+        </div>
+        
+        <div class="modal-body">
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="book-title">Book Title</label>
+              <input type="text" id="book-title" class="form-control">
+            </div>
+            
+            <div class="form-group">
+              <label for="book-author">Author(s)</label>
+              <input type="text" id="book-author" class="form-control" placeholder="Separate multiple authors with commas">
+            </div>
+            
+            <div class="form-group">
+              <label for="book-isbn">ISBN</label>
+              <input type="text" id="book-isbn" class="form-control">
+            </div>
+            
+            <div class="form-group">
+              <label for="book-publisher">Publisher</label>
+              <input type="text" id="book-publisher" class="form-control">
+            </div>
+            
+            <div class="form-group">
+              <label for="book-year">Publication Year</label>
+              <input type="number" id="book-year" class="form-control">
+            </div>
+            
+            <div class="form-group">
+              <label for="book-edition">Edition</label>
+              <input type="text" id="book-edition" class="form-control">
+            </div>
+            
+            <div class="form-group">
+              <label for="book-subject">Subject</label>
+              <select id="book-subject" class="form-control">
+                <option value="">Select a Subject</option>
+                <option value="computer-science">Computer Science</option>
+                <option value="engineering">Engineering</option>
+                <option value="mathematics">Mathematics</option>
+                <option value="science">Science</option>
+                <option value="humanities">Humanities</option>
+                <option value="social-sciences">Social Sciences</option>
+                <option value="arts">Arts</option>
+                <option value="business">Business</option>
+                <option value="medicine">Medicine</option>
+                <option value="law">Law</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label for="book-location">Location</label>
+              <select id="book-location" class="form-control">
+                <option value="">Select a Location</option>
+                <option value="san-bartolome">San Bartolome</option>
+                <option value="san-francisco">San Francisco</option>
+                <option value="batasan">Batasan</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label for="book-copies">Number of Copies</label>
+              <input type="number" id="book-copies" class="form-control" min="0">
+            </div>
+            
+            <div class="form-group">
+              <label for="book-image">Book Cover Image</label>
+              <input type="file" id="book-image" class="form-control" accept="image/*">
+            </div>
+            
+            <div class="form-group full-width">
+              <label for="book-description">Description</label>
+              <textarea id="book-description" class="form-control" rows="4"></textarea>
+            </div>
+          </div>
+        </div>
+        
+        <div class="modal-footer">
+          <button class="btn btn-secondary close-modal">Cancel</button>
+          <button class="btn btn-primary" id="save-book">Save Book</button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Delete Confirmation Modal -->
+    <div class="modal" id="delete-modal">
+      <div class="modal-content small">
+        <div class="modal-header">
+          <h2>Confirm Deletion</h2>
+          <button class="close-modal">&times;</button>
+        </div>
+        
+        <div class="modal-body">
+          <p>Are you sure you want to delete this book? This action cannot be undone.</p>
+          <p id="delete-book-title" class="font-bold"></p>
+        </div>
+        
+        <div class="modal-footer">
+          <button class="btn btn-secondary close-modal">Cancel</button>
+          <button class="btn btn-danger" id="confirm-delete">Delete</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/admin.js"></script>
+</body>
+</html>

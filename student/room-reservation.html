@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Room Reservation - Library Management System</title>
+  <link rel="stylesheet" href="../css/main.css">
+  <link rel="stylesheet" href="../css/student.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <img src="../assets/logo.png" alt="Library Logo" class="sidebar-logo">
+        <h3>Library System</h3>
+      </div>
+      
+      <nav class="sidebar-nav">
+        <ul>
+          <li>
+            <a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+          </li>
+          <li>
+            <a href="transactions.html"><i class="fas fa-exchange-alt"></i> Transactions</a>
+          </li>
+          <li>
+            <a href="book-request.html"><i class="fas fa-book"></i> Book Request</a>
+          </li>
+          <li class="active">
+            <a href="room-reservation.html"><i class="fas fa-door-open"></i> Room Reservation</a>
+          </li>
+          <li>
+            <a href="announcements.html"><i class="fas fa-bullhorn"></i> Announcements</a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Top Navigation -->
+      <header class="top-nav">
+        <div class="search-container">
+          <input type="text" placeholder="Search rooms...">
+          <button type="button"><i class="fas fa-search"></i></button>
+        </div>
+        
+        <div class="user-menu">
+          <div class="notifications">
+            <button class="icon-btn"><i class="fas fa-bell"></i></button>
+          </div>
+          
+          <div class="profile-dropdown">
+            <button class="profile-toggle">
+              <img src="../assets/images/default-profile.png" alt="Profile" id="user-profile-img">
+              <span id="user-name">John Doe</span>
+              <i class="fas fa-chevron-down"></i>
+            </button>
+            
+            <div class="dropdown-menu">
+              <a href="#" id="edit-profile"><i class="fas fa-user-edit"></i> Edit Profile</a>
+              <a href="#" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+          </div>
+        </div>
+      </header>
+      
+      <!-- Content Area -->
+      <div class="content">
+        <h1 class="page-title">Room Reservation</h1>
+        
+        <!-- Guidelines Card -->
+        <div class="card">
+          <div class="card-header">
+            <h2>Library Room Guidelines</h2>
+          </div>
+          
+          <div class="card-body">
+            <div class="guidelines-list">
+              <div class="guideline-item">
+                <i class="fas fa-clock"></i>
+                <div class="guideline-text">
+                  <h4>Operating Hours</h4>
+                  <p>Rooms are available from 8:00 AM to 5:00 PM, Monday through Saturday</p>
+                </div>
+              </div>
+              
+              <div class="guideline-item">
+                <i class="fas fa-users"></i>
+                <div class="guideline-text">
+                  <h4>Group Size</h4>
+                  <p>Minimum of 5 and maximum of 10 members per room</p>
+                </div>
+              </div>
+              
+              <div class="guideline-item">
+                <i class="fas fa-hourglass-half"></i>
+                <div class="guideline-text">
+                  <h4>Duration</h4>
+                  <p>Maximum reservation time is 1 hours per session</p>
+                </div>
+              </div>
+              
+              <div class="guideline-item">
+                <i class="fas fa-calendar-alt"></i>
+                <div class="guideline-text">
+                  <h4>Advance Booking</h4>
+                  <p>Reservations must be made at least 24 hours in advance</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Reservation Form -->
+        <div class="card">
+          <div class="card-header">
+            <h2>Room Reservation Form</h2>
+          </div>
+          
+          <div class="card-body">
+            <form id="reservation-form" class="reservation-form">
+              <div class="form-grid">
+                <div class="form-group">
+                  <label for="room-type">Room Type</label>
+                  <select id="room-type" class="form-control" required>
+                    <option value="">Select a room type</option>
+                    <option value="study">Study Room</option>
+                    <option value="computer">Computer Laboratory</option>
+                    <option value="multimedia">Multimedia Room</option>
+                    <option value="discussion">Discussion Room</option>
+                  </select>
+                </div>
+                
+                <div class="form-group">
+                  <label for="reservation-date">Date</label>
+                  <input type="date" id="reservation-date" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                  <label for="start-time">Start Time</label>
+                  <input type="time" id="start-time" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                  <label for="duration">Duration (hours)</label>
+                  <select id="duration" class="form-control" required>
+                    <option value="1">1 hour</option>
+                  </select>
+                </div>
+                
+                <div class="form-group">
+                  <label for="num-members">Number of Members</label>
+                  <input type="number" id="num-members" class="form-control" min="3" max="10" required>
+                </div>
+                
+                <div class="form-group">
+                  <label for="purpose">Purpose</label>
+                  <select id="purpose" class="form-control" required>
+                    <option value="">Select purpose</option>
+                    <option value="group-study">Group Study</option>
+                    <option value="research">Research</option>
+                    <option value="project">Project Work</option>
+                    <option value="presentation">Presentation Practice</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+                
+                <div class="form-group full-width">
+                  <label for="purpose-details">Purpose Details</label>
+                  <textarea id="purpose-details" class="form-control" rows="3" placeholder="Please provide more details about your purpose"></textarea>
+                </div>
+                
+                <div class="form-group full-width">
+                  <div class="consent-box">
+                    <input type="checkbox" id="privacy-consent" required>
+                    <label for="privacy-consent">
+                      I agree to the library's room usage policy and understand that misuse may result in suspension of privileges.
+                    </label>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="form-actions">
+                <button type="button" class="btn btn-secondary" id="add-members-btn">
+                  <i class="fas fa-users"></i> Add Members
+                </button>
+                <button type="submit" class="btn btn-primary">
+                  <i class="fas fa-check"></i> Submit Reservation
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </main>
+    
+    <!-- Member List Modal -->
+    <div class="modal" id="member-list-modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Group Members</h2>
+          <button class="close-modal">&times;</button>
+        </div>
+        
+        <div class="modal-body">
+          <div class="member-form">
+            <div class="form-group">
+              <label for="member-name">Member Name</label>
+              <input type="text" id="member-name" class="form-control" placeholder="Enter member's full name">
+            </div>
+            
+            <div class="form-group">
+              <label for="member-id">Student/Employee ID</label>
+              <input type="text" id="member-id" class="form-control" placeholder="Enter member's ID number">
+            </div>
+            
+            <button class="btn btn-primary" id="add-member">Add Member</button>
+          </div>
+          
+          <div class="member-list">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>ID Number</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="member-list-body">
+                <!-- Will be populated dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+        
+        <div class="modal-footer">
+          <button class="btn btn-secondary close-modal">Cancel</button>
+          <button class="btn btn-primary" id="save-members">Save Members</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script src="../js/student.js"></script>
+</body>
+</html>
