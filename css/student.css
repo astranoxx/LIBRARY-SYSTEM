@@ -96,32 +96,160 @@
   z-index: 10;
 }
 
+/* Search Container Styles */
 .search-container {
-  display: flex;
-  align-items: center;
+  position: relative;
   width: 300px;
+  transition: width 0.3s ease;
+}
+
+.search-container:focus-within {
+  width: 400px;
 }
 
 .search-container input {
-  flex: 1;
-  padding: var(--space-2) var(--space-3);
-  border: 1px solid var(--neutral-200);
-  border-right: none;
-  border-top-left-radius: var(--border-radius-md);
-  border-bottom-left-radius: var(--border-radius-md);
+  width: 100%;
+  padding: 10px 40px 10px 15px;
+  border: 2px solid var(--neutral-200);
+  border-radius: 25px;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  background-color: var(--neutral-50);
+}
+
+.search-container input:focus {
   outline: none;
+  border-color: var(--primary-400);
+  background-color: white;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
 .search-container button {
-  padding: var(--space-2) var(--space-3);
-  background-color: var(--primary-600);
-  color: white;
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
   border: none;
-  border-top-right-radius: var(--border-radius-md);
-  border-bottom-right-radius: var(--border-radius-md);
+  color: var(--neutral-500);
+  padding: 8px;
   cursor: pointer;
+  transition: color 0.3s ease;
 }
 
+.search-container button:hover {
+  color: var(--primary-600);
+}
+
+/* Filters Container Styles */
+.filters-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin: 20px 0;
+  padding: 0;
+  background-color: transparent;
+  box-shadow: none;
+}
+
+/* Category and Location Filter Common Styles */
+.category-filter,
+.location-filter {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  flex-wrap: wrap;
+}
+
+/* Common Button Styles for both Category and Location */
+.category-btn,
+.location-btn {
+  padding: 8px 15px;
+  font-size: 14px;
+  background-color: #f0f0f0;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  color: var(--neutral-600);
+}
+
+.category-btn:hover,
+.location-btn:hover {
+  background-color: var(--primary-600);
+  color: white;
+  transform: translateY(-1px);
+}
+
+.category-btn.active,
+.location-btn.active {
+  background-color: var(--primary-600);
+  color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Location Button Specific Colors */
+.location-btn[data-location="all"] {
+  background-color: #f0f0f0;
+  color: var(--neutral-600);
+}
+
+.location-btn[data-location="san-bartolome"] {
+  background-color: #f0f0f0;
+  color: var(--neutral-600);
+}
+
+.location-btn[data-location="san-francisco"] {
+  background-color: #f0f0f0;
+  color: var(--neutral-600);
+}
+
+.location-btn[data-location="batasan"] {
+  background-color: #f0f0f0;
+  color: var(--neutral-600);
+}
+
+/* Location Button Active States */
+.location-btn[data-location="all"].active {
+  background-color: var(--primary-600);
+  color: white;
+}
+
+.location-btn[data-location="san-bartolome"].active {
+  background-color: var(--primary-600);
+  color: white;
+}
+
+.location-btn[data-location="san-francisco"].active {
+  background-color: var(--primary-600);
+  color: white;
+}
+
+.location-btn[data-location="batasan"].active {
+  background-color: var(--primary-600);
+  color: white;
+}
+
+/* Animation for book cards */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.book-card {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* User Menu */
 .user-menu {
   display: flex;
   align-items: center;
@@ -444,9 +572,24 @@
   }
   
   .search-container {
-    width: auto;
-    flex: 1;
-    margin-right: var(--space-3);
+    width: 100%;
+  }
+  
+  .search-container:focus-within {
+    width: 100%;
+  }
+  
+  .filters-container {
+    padding: 10px;
+  }
+  
+  .location-filter {
+    justify-content: center;
+  }
+  
+  .location-btn {
+    font-size: 0.85rem;
+    padding: 6px 12px;
   }
   
   .filter-container {
@@ -460,6 +603,17 @@
   .filter-container button {
     width: 100%;
     margin-bottom: var(--space-2);
+  }
+  
+  .category-filter,
+  .location-filter {
+    gap: 8px;
+  }
+  
+  .category-btn,
+  .location-btn {
+    padding: 6px 12px;
+    font-size: 13px;
   }
 }
 
@@ -835,5 +989,22 @@ p {
   border-radius: 4px;
   padding: 4px 8px;
   font-size: 0.9rem;
+}
+
+/* Book Type Label in Modal */
+.book-type-label {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin-top: 8px;
+  background-color: var(--neutral-200);
+  color: var(--neutral-700);
+}
+
+.book-type-label.ebook-label {
+  background-color: var(--primary-100);
+  color: var(--primary-700);
 }
 

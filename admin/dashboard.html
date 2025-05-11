@@ -134,11 +134,6 @@
             <span>Review Requests</span>
           </a>
           
-          <a href="reports.html" class="action-card">
-            <i class="fas fa-file-export"></i>
-            <span>Generate Report</span>
-          </a>
-          
           <a href="announcements.html" class="action-card">
             <i class="fas fa-bullhorn"></i>
             <span>Post Announcement</span>
@@ -149,15 +144,17 @@
         <div class="card">
           <div class="card-header">
             <h2>Pending Requests</h2>
-            <div class="card-tabs">
-              <button class="card-tab active" data-tab="book-req">Books</button>
-              <button class="card-tab" data-tab="room-req">Rooms</button>
+            <div class="filter-buttons">
+              <button class="filter-btn active" data-filter="all">All</button>
+              <button class="filter-btn" data-filter="book">Books</button>
+              <button class="filter-btn" data-filter="room">Rooms</button>
             </div>
           </div>
           
           <div class="card-body">
-            <!-- Book Requests Tab -->
-            <div class="tab-content active" id="book-req">
+            <!-- Book Requests Table -->
+            <div class="table-container book-table">
+              <h3 class="table-title"><i class="fas fa-book"></i> Book Requests</h3>
               <table class="data-table">
                 <thead>
                   <tr>
@@ -169,7 +166,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
+                  <tr class="request-row book-request">
                     <td>John Smith</td>
                     <td>2023-0001</td>
                     <td>Introduction to Database Systems</td>
@@ -179,7 +176,7 @@
                       <button class="btn btn-danger btn-sm">Reject</button>
                     </td>
                   </tr>
-                  <tr>
+                  <tr class="request-row book-request">
                     <td>Sarah Johnson</td>
                     <td>2023-0042</td>
                     <td>Artificial Intelligence: A Modern Approach</td>
@@ -189,22 +186,13 @@
                       <button class="btn btn-danger btn-sm">Reject</button>
                     </td>
                   </tr>
-                  <tr>
-                    <td>Michael Brown</td>
-                    <td>2023-0105</td>
-                    <td>Clean Code: A Handbook of Agile Software Craftsmanship</td>
-                    <td>2023-09-17</td>
-                    <td>
-                      <button class="btn btn-success btn-sm">Approve</button>
-                      <button class="btn btn-danger btn-sm">Reject</button>
-                    </td>
-                  </tr>
                 </tbody>
               </table>
             </div>
-            
-            <!-- Room Requests Tab -->
-            <div class="tab-content" id="room-req">
+
+            <!-- Room Requests Table -->
+            <div class="table-container room-table">
+              <h3 class="table-title"><i class="fas fa-door-open"></i> Room Requests</h3>
               <table class="data-table">
                 <thead>
                   <tr>
@@ -218,7 +206,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
+                  <tr class="request-row room-request">
                     <td>Emily Davis</td>
                     <td>2023-0078</td>
                     <td>Study Room 102</td>
@@ -230,7 +218,7 @@
                       <button class="btn btn-danger btn-sm">Reject</button>
                     </td>
                   </tr>
-                  <tr>
+                  <tr class="request-row room-request">
                     <td>James Wilson</td>
                     <td>2023-0156</td>
                     <td>Computer Lab 201</td>

@@ -69,7 +69,16 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Show corresponding tab content
         const tabId = tab.dataset.tab;
-        document.getElementById(tabId).classList.add('active');
+        const selectedTab = document.getElementById(tabId);
+        selectedTab.classList.add('active');
+
+        // Update search functionality based on active tab
+        const searchInput = document.querySelector('.search-container input');
+        if (searchInput) {
+          searchInput.value = ''; // Clear search when switching tabs
+          const allRows = document.querySelectorAll('.data-table tbody tr');
+          allRows.forEach(row => row.style.display = '');
+        }
       });
     });
   }
@@ -281,7 +290,193 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     });
   }
+
+  // Search functionality for book requests
+  const bookSearchInput = document.querySelector('.card:first-of-type .search-container input');
+  const bookSearchButton = document.querySelector('.card:first-of-type .search-container button');
+
+  if (bookSearchInput && bookSearchButton) {
+    function performBookSearch() {
+      const searchTerm = bookSearchInput.value.toLowerCase().trim();
+      const bookTable = document.querySelector('.card:first-of-type .data-table');
+      
+      if (bookTable) {
+        const rows = bookTable.querySelectorAll('tbody tr');
+        rows.forEach(row => {
+          const memberName = row.cells[0].textContent.toLowerCase();
+          const idNumber = row.cells[1].textContent.toLowerCase();
+          const bookTitle = row.cells[2].textContent.toLowerCase();
+          
+          const isVisible = memberName.includes(searchTerm) || 
+                          idNumber.includes(searchTerm) || 
+                          bookTitle.includes(searchTerm);
+          
+          row.style.display = isVisible ? '' : 'none';
+        });
+      }
+    }
+
+    bookSearchButton.addEventListener('click', performBookSearch);
+    bookSearchInput.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        performBookSearch();
+      }
+    });
+
+    bookSearchInput.addEventListener('input', function() {
+      if (this.value.trim() === '') {
+        const rows = document.querySelector('.card:first-of-type .data-table tbody tr');
+        rows.forEach(row => row.style.display = '');
+      }
+    });
+  }
+
+  // Search functionality for room requests
+  const roomSearchInput = document.querySelector('.card:nth-of-type(2) .search-container input');
+  const roomSearchButton = document.querySelector('.card:nth-of-type(2) .search-container button');
+
+  if (roomSearchInput && roomSearchButton) {
+    function performRoomSearch() {
+      const searchTerm = roomSearchInput.value.toLowerCase().trim();
+      const roomTable = document.querySelector('.card:nth-of-type(2) .data-table');
+      
+      if (roomTable) {
+        const rows = roomTable.querySelectorAll('tbody tr');
+        rows.forEach(row => {
+          const memberName = row.cells[0].textContent.toLowerCase();
+          const idNumber = row.cells[1].textContent.toLowerCase();
+          const roomName = row.cells[2].textContent.toLowerCase();
+          const purpose = row.cells[5].textContent.toLowerCase();
+          
+          const isVisible = memberName.includes(searchTerm) || 
+                          idNumber.includes(searchTerm) || 
+                          roomName.includes(searchTerm) ||
+                          purpose.includes(searchTerm);
+          
+          row.style.display = isVisible ? '' : 'none';
+        });
+      }
+    }
+
+    roomSearchButton.addEventListener('click', performRoomSearch);
+    roomSearchInput.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        performRoomSearch();
+      }
+    });
+
+    roomSearchInput.addEventListener('input', function() {
+      if (this.value.trim() === '') {
+        const rows = document.querySelector('.card:nth-of-type(2) .data-table tbody tr');
+        rows.forEach(row => row.style.display = '');
+      }
+    });
+  }
+
+  // Filter buttons functionality
+  const filterButtons = document.querySelectorAll('.filter-btn');
+  const bookTable = document.querySelector('.book-table');
+  const roomTable = document.querySelector('.room-table');
+
+  if (filterButtons.length > 0 && bookTable && roomTable) {
+    filterButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        // Remove active class from all buttons
+        filterButtons.forEach(btn => btn.classList.remove('active'));
+        
+        // Add active class to clicked button
+        this.classList.add('active');
+        
+        // Get the filter value
+        const filterValue = this.dataset.filter;
+        
+        // Show/hide tables based on filter
+        if (filterValue === 'all') {
+          bookTable.style.display = '';
+          roomTable.style.display = '';
+        } else if (filterValue === 'book') {
+          bookTable.style.display = '';
+          roomTable.style.display = 'none';
+        } else if (filterValue === 'room') {
+          bookTable.style.display = 'none';
+          roomTable.style.display = '';
+        }
+      });
+    });
+  }
+
+  // Request handling functionality
+  function handleRequest(type, action, row) {
+    const cells = row.cells;
+    const memberName = cells[0].textContent;
+    let confirmationMessage = '';
+    let activityMessage = '';
+
+    if (type === 'book') {
+      const bookTitle = cells[2].textContent;
+      confirmationMessage = `Are you sure you want to ${action} ${memberName}'s request for "${bookTitle}"?`;
+      activityMessage = `${memberName}'s book request for "${bookTitle}" was ${action}ed`;
+    } else {
+      const roomName = cells[2].textContent;
+      const date = cells[3].textContent;
+      const time = cells[4].textContent;
+      confirmationMessage = `Are you sure you want to ${action} ${memberName}'s request for ${roomName} on ${date} at ${time}?`;
+      activityMessage = `${memberName}'s room request for ${roomName} was ${action}ed`;
+    }
+
+    if (confirm(confirmationMessage)) {
+      const statusClass = action === 'approve' ? 'approved' : 'rejected';
+      const colspan = type === 'book' ? 5 : 7;
+      
+      row.innerHTML = `
+        <td colspan="${colspan}" class="text-center">
+          <span class="status-badge ${statusClass}">Request ${action}d</span>
+        </td>
+      `;
+      
+      addToRecentActivity(activityMessage);
+      setTimeout(() => row.remove(), 2000);
+    }
+  }
+
+  // Add event listeners for approve/reject buttons
+  document.querySelectorAll('.btn-success, .btn-danger').forEach(button => {
+    button.addEventListener('click', function() {
+      const row = this.closest('tr');
+      const isBookRequest = row.closest('.book-table') !== null;
+      const action = this.classList.contains('btn-success') ? 'approve' : 'reject';
+      handleRequest(isBookRequest ? 'book' : 'room', action, row);
+    });
+  });
+
+  // Function to add items to recent activity
+  function addToRecentActivity(activityText) {
+    const activityList = document.querySelector('.activity-list');
+    if (activityList) {
+      const activityItem = document.createElement('div');
+      activityItem.className = 'activity-item';
+      activityItem.innerHTML = `
+        <div class="activity-icon">
+          <i class="fas fa-clipboard-check"></i>
+        </div>
+        <div class="activity-details">
+          <p>${activityText}</p>
+          <span class="activity-time">Just now</span>
+        </div>
+      `;
+      
+      activityList.insertBefore(activityItem, activityList.firstChild);
+      
+      const activities = activityList.querySelectorAll('.activity-item');
+      if (activities.length > 5) {
+        activities[activities.length - 1].remove();
+      }
+    }
+  }
 });
+
 function openMemberModal() {
   document.getElementById('memberModal').style.display = 'block';
 }

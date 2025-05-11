@@ -62,9 +62,9 @@
           <div class="form-group">
             <label>Name</label>
             <div class="name-fields">
-              <input type="text" id="register-lastname" class="form-control" placeholder="Last Name">
-              <input type="text" id="register-firstname" class="form-control" placeholder="First Name">
-              <input type="text" id="register-middlename" class="form-control" placeholder="Middle Name">
+              <input type="text" id="register-lastname" class="form-control" placeholder="Last Name" pattern="[A-Za-z\s]+" title="Only letters and spaces are allowed">
+              <input type="text" id="register-firstname" class="form-control" placeholder="First Name" pattern="[A-Za-z\s]+" title="Only letters and spaces are allowed">
+              <input type="text" id="register-middlename" class="form-control" placeholder="Middle Name" pattern="[A-Za-z\s]+" title="Only letters and spaces are allowed">
             </div>
           </div>
           
@@ -109,12 +109,13 @@
           
           <div class="form-group">
             <label for="register-id">Student/Employee Number</label>
-            <input type="text" id="register-id" class="form-control" placeholder="Enter your ID number">
+            <input type="text" id="register-id" class="form-control" placeholder="Enter your ID number" pattern="[0-9\-]+" title="Only numbers and hyphens are allowed">
           </div>
           
           <div class="form-group">
             <label for="register-password">Password</label>
-            <input type="password" id="register-password" class="form-control" placeholder="Create a password">
+            <input type="password" id="register-password" class="form-control" placeholder="Create a password" 
+                   title="Password must contain at least 8 characters, 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character">
           </div>
           
           <div class="form-group">

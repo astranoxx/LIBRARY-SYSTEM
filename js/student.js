@@ -402,8 +402,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const modalCover = document.getElementById("modal-book-cover");
   const modalTitle = document.getElementById("modal-book-title");
   const modalAuthor = document.getElementById("modal-book-author");
+  const modalType = document.getElementById("modal-book-type");
   const closeModalButtons = document.querySelectorAll(".close-modal");
   const confirmRequestButton = document.getElementById("confirm-request");
+  const emailContainer = document.getElementById("email-container");
+  const pickupDateContainer = document.getElementById("pickup-date-container");
 
   requestButtons.forEach((button) => {
     button.addEventListener("click", (event) => {
@@ -411,11 +414,32 @@ document.addEventListener("DOMContentLoaded", () => {
       const coverSrc = bookCard.querySelector(".book-cover img").src;
       const title = bookCard.querySelector("h3").textContent;
       const author = bookCard.querySelector(".book-author").textContent;
+      const bookType = button.dataset.bookType;
 
       // Populate modal with book info
       modalCover.src = coverSrc;
       modalTitle.textContent = title;
       modalAuthor.textContent = author;
+      modalType.textContent = bookType === "ebook" ? "E-Book" : "Physical Book";
+
+      // Show/hide fields based on book type
+      if (bookType === "ebook") {
+        emailContainer.style.display = "block";
+        pickupDateContainer.style.display = "none";
+        modalType.classList.add("ebook-label");
+      } else {
+        emailContainer.style.display = "none";
+        pickupDateContainer.style.display = "block";
+        modalType.classList.remove("ebook-label");
+      }
+
+      // Reset form
+      document.getElementById("pickup-date").value = "";
+      document.getElementById("request-notes").value = "";
+      document.getElementById("terms-agreement").checked = false;
+      confirmRequestButton.disabled = true;
+
+      // Show modal
       modal.style.display = "block";
     });
   });
@@ -429,15 +453,27 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Confirm book request
   confirmRequestButton.addEventListener("click", () => {
+    const bookType = modalType.textContent.toLowerCase();
     const pickupDate = document.getElementById("pickup-date").value;
     const requestNotes = document.getElementById("request-notes").value;
+    const email = document.getElementById("email-confirm").value;
 
-    if (!pickupDate) {
+    if (bookType === "physical book" && !pickupDate) {
       alert("Please select a preferred pickup date.");
       return;
     }
 
-    alert(`Book requested successfully!\nPickup Date: ${pickupDate}\nNotes: ${requestNotes}`);
+    let successMessage = "";
+    if (bookType === "ebook") {
+      successMessage = `E-book request submitted successfully!\nDownload link will be sent to: ${email}`;
+    } else {
+      successMessage = `Book request submitted successfully!\nPickup Date: ${pickupDate}`;
+    }
+    if (requestNotes) {
+      successMessage += `\nNotes: ${requestNotes}`;
+    }
+
+    alert(successMessage);
     modal.style.display = "none";
   });
 
@@ -449,44 +485,146 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-// Wait for DOM to load
-document.addEventListener("DOMContentLoaded", () => {
-  const modal = document.getElementById("request-modal");
-  const closeModalButtons = document.querySelectorAll(".close-modal");
-  const requestButtons = document.querySelectorAll(".book-card .btn-primary:not([disabled])");
+// Search and Filter Functionality
+const searchInput = document.querySelector('.search-container input');
+const locationButtons = document.querySelectorAll('.location-btn');
+const bookCards = document.querySelectorAll('.book-card');
 
-  const modalTitle = document.getElementById("modal-book-title");
-  const modalAuthor = document.getElementById("modal-book-author");
-  const modalCover = document.getElementById("modal-book-cover");
+// Search functionality
+if (searchInput) {
+  searchInput.addEventListener('input', function() {
+    const searchTerm = this.value.toLowerCase().trim();
+    filterBooks();
+  });
+}
 
-  // Open modal
-  requestButtons.forEach(button => {
-    button.addEventListener("click", () => {
-      const bookCard = button.closest(".book-card");
-      const title = bookCard.querySelector("h3").textContent;
-      const author = bookCard.querySelector(".book-author").textContent;
-      const coverSrc = bookCard.querySelector("img").src;
-
-      modalTitle.textContent = title;
-      modalAuthor.textContent = author;
-      modalCover.src = coverSrc;
-
-      modal.style.display = "block";
+// Location filter functionality
+if (locationButtons.length > 0) {
+  locationButtons.forEach(button => {
+    button.addEventListener('click', function() {
+      // Remove active class from all location buttons
+      locationButtons.forEach(btn => btn.classList.remove('active'));
+      // Add active class to clicked button
+      this.classList.add('active');
+      filterBooks();
     });
   });
+}
 
-  // Close modal
-  closeModalButtons.forEach(button => {
-    button.addEventListener("click", () => {
-      modal.style.display = "none";
-    });
-  });
+// Combined filter function
+function filterBooks() {
+  const searchTerm = searchInput ? searchInput.value.toLowerCase().trim() : '';
+  const selectedLocation = document.querySelector('.location-btn.active').dataset.location;
 
-  // Optional: Close modal when clicking outside of modal-content
-  window.addEventListener("click", (e) => {
-    if (e.target === modal) {
-      modal.style.display = "none";
+  bookCards.forEach(card => {
+    const title = card.querySelector('h3').textContent.toLowerCase();
+    const author = card.querySelector('.book-author').textContent.toLowerCase();
+    const location = card.dataset.location;
+    const category = card.dataset.category;
+
+    // Check if book matches search term
+    const matchesSearch = searchTerm === '' || 
+      title.includes(searchTerm) || 
+      author.includes(searchTerm);
+
+    // Check if book matches location filter
+    const matchesLocation = selectedLocation === 'all' || location === selectedLocation;
+
+    // Show/hide card based on filters
+    if (matchesSearch && matchesLocation) {
+      card.style.display = 'block';
+      // Add animation
+      card.style.animation = 'fadeIn 0.3s ease-in-out';
+    } else {
+      card.style.display = 'none';
     }
   });
-});
+
+  // Update pagination after filtering
+  updatePagination();
+}
+
+// Update pagination based on visible cards
+function updatePagination() {
+  const visibleCards = Array.from(bookCards).filter(card => card.style.display !== 'none');
+  const itemsPerPage = 6; // Adjust this number based on your grid layout
+  const totalPages = Math.ceil(visibleCards.length / itemsPerPage);
+  
+  // Update pagination buttons
+  const paginationContainer = document.querySelector('.pagination');
+  if (paginationContainer) {
+    let paginationHTML = `
+      <button class="pagination-btn" data-page="prev"><i class="fas fa-chevron-left"></i></button>
+    `;
+
+    for (let i = 1; i <= totalPages; i++) {
+      paginationHTML += `
+        <button class="pagination-btn ${i === 1 ? 'active' : ''}" data-page="${i}">${i}</button>
+      `;
+    }
+
+    paginationHTML += `
+      <button class="pagination-btn" data-page="next"><i class="fas fa-chevron-right"></i></button>
+    `;
+
+    paginationContainer.innerHTML = paginationHTML;
+
+    // Add event listeners to new pagination buttons
+    const paginationButtons = paginationContainer.querySelectorAll('.pagination-btn');
+    paginationButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        const page = this.dataset.page;
+        if (page === 'prev') {
+          const currentPage = parseInt(document.querySelector('.pagination-btn.active').dataset.page);
+          if (currentPage > 1) {
+            showPage(currentPage - 1);
+          }
+        } else if (page === 'next') {
+          const currentPage = parseInt(document.querySelector('.pagination-btn.active').dataset.page);
+          if (currentPage < totalPages) {
+            showPage(currentPage + 1);
+          }
+        } else {
+          showPage(parseInt(page));
+        }
+      });
+    });
+  }
+
+  // Show first page by default
+  showPage(1);
+}
+
+// Show specific page of results
+function showPage(page) {
+  const visibleCards = Array.from(bookCards).filter(card => card.style.display !== 'none');
+  const itemsPerPage = 6;
+  const start = (page - 1) * itemsPerPage;
+  const end = start + itemsPerPage;
+
+  // Hide all cards first
+  bookCards.forEach(card => {
+    if (card.style.display !== 'none') {
+      card.style.display = 'none';
+    }
+  });
+
+  // Show cards for current page
+  visibleCards.slice(start, end).forEach(card => {
+    card.style.display = 'block';
+    card.style.animation = 'fadeIn 0.3s ease-in-out';
+  });
+
+  // Update active pagination button
+  const paginationButtons = document.querySelectorAll('.pagination-btn');
+  paginationButtons.forEach(btn => {
+    btn.classList.remove('active');
+    if (btn.dataset.page === page.toString()) {
+      btn.classList.add('active');
+    }
+  });
+}
+
+// Initial filter
+filterBooks();
 
