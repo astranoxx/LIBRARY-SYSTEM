@@ -53,6 +53,7 @@
     }
 
     .search-wrapper {
+      position: relative;
       display: flex;
       align-items: center;
       gap: 8px;
@@ -60,21 +61,46 @@
       padding: 8px;
       border-radius: 8px;
       box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+    }
+
+    .search-wrapper:focus-within {
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      border-color: #3b82f6;
+    }
+
+    .search-container {
+      position: relative;
+      flex: 1;
     }
 
     .search-container input {
-      flex: 1;
-      padding: 8px 12px;
+      width: 100%;
+      padding: 8px 12px 8px 35px; /* Added left padding for icon */
       border: 1px solid #e2e8f0;
       border-radius: 4px;
       font-size: 14px;
-      min-width: 200px;
+      transition: all 0.3s ease;
     }
 
     .search-container input:focus {
       outline: none;
       border-color: #3b82f6;
       box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #64748b;
+      pointer-events: none;
+      transition: color 0.3s ease;
+    }
+
+    .search-container input:focus + .search-icon {
+      color: #3b82f6;
     }
 
     .search-type {
@@ -84,32 +110,47 @@
       font-size: 14px;
       background-color: white;
       cursor: pointer;
+      transition: all 0.3s ease;
     }
 
-    .search-container button {
-      padding: 8px 12px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    #searchButton {
-      background-color: #3b82f6;
-      color: white;
-    }
-
-    #searchButton:hover {
-      background-color: #2563eb;
+    .search-type:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
     }
 
     .clear-search {
       background-color: #ef4444;
       color: white;
+      border: none;
+      padding: 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .clear-search:hover {
       background-color: #dc2626;
+    }
+
+    .search-highlight {
+      background-color: #fef08a;
+      padding: 0 2px;
+      border-radius: 2px;
+    }
+
+    .search-stats {
+      font-size: 12px;
+      color: #64748b;
+      margin-top: 4px;
+      display: none;
+    }
+
+    .search-wrapper.active .search-stats {
+      display: block;
     }
 
     .no-results {
@@ -147,7 +188,6 @@
       <header class="top-nav">
         <div class="search-container">
           <div class="search-wrapper">
-            <input type="text" id="searchInput" placeholder="Search announcements...">
             <select id="searchType" class="search-type">
               <option value="all">All Types</option>
               <option value="Important">Important</option>
@@ -155,10 +195,6 @@
               <option value="Events">Events</option>
               <option value="Maintenance">Maintenance</option>
             </select>
-            <button type="button" id="searchButton"><i class="fas fa-search"></i></button>
-            <button type="button" id="clearSearch" class="clear-search" style="display: none;">
-              <i class="fas fa-times"></i>
-            </button>
           </div>
         </div>
         
@@ -743,73 +779,40 @@
         });
       }
 
-      // Replace the existing search functionality with this enhanced version
-      const searchInput = document.getElementById('searchInput');
+      // Get the filter elements
       const searchType = document.getElementById('searchType');
-      const searchButton = document.getElementById('searchButton');
-      const clearSearch = document.getElementById('clearSearch');
-      const noResults = document.getElementById('noResults');
-      let searchTimeout;
+      const announcementList = document.querySelector('.announcement-list');
 
-      function performSearch() {
-        const searchTerm = searchInput.value.toLowerCase().trim();
-        const selectedType = searchType.value.toLowerCase();
+      // Function to filter announcements by type
+      function filterAnnouncements() {
+        const selectedType = searchType.value;
         const cards = document.querySelectorAll('.announcement-card');
         let hasResults = false;
-        
+
         cards.forEach(card => {
-          const title = card.querySelector('h3').textContent.toLowerCase();
-          const content = card.querySelector('p:nth-of-type(2)').textContent.toLowerCase();
-          const type = card.querySelector('.tag').textContent.toLowerCase();
-          const date = card.querySelector('.date').textContent.toLowerCase();
-          const postedBy = card.querySelector('p:last-child').textContent.toLowerCase();
+          const type = card.querySelector('.tag').textContent;
           
-          // Check if any part of the announcement matches the search term
-          const matchesSearch = searchTerm === '' || // Show all if search is empty
-            title.includes(searchTerm) || 
-            content.includes(searchTerm) || 
-            date.includes(searchTerm) ||
-            postedBy.includes(searchTerm);
-          
-          // Check if announcement matches selected type
-          const matchesType = selectedType === 'all' || type === selectedType.toLowerCase();
-          
-          // Show/hide card based on both search term and type
-          const isVisible = matchesSearch && matchesType;
-          card.style.display = isVisible ? '' : 'none';
-          
-          if (isVisible) hasResults = true;
+          // Show or hide the card based on type
+          if (selectedType === 'all' || type === selectedType) {
+            card.style.display = '';
+            hasResults = true;
+          } else {
+            card.style.display = 'none';
+          }
         });
 
-        // Show/hide no results message
-        noResults.style.display = hasResults ? 'none' : 'block';
-        
-        // Show/hide clear search button
-        clearSearch.style.display = (searchTerm || selectedType !== 'all') ? 'block' : 'none';
+        // Show or hide the no results message
+        const noResults = document.getElementById('noResults');
+        if (noResults) {
+          noResults.style.display = hasResults ? 'none' : 'block';
+        }
       }
 
-      // Real-time search as user types (with debounce for performance)
-      searchInput.addEventListener('input', function() {
-        clearTimeout(searchTimeout);
-        searchTimeout = setTimeout(performSearch, 300); // 300ms debounce
-      });
+      // Add event listener for type filter
+      searchType.addEventListener('change', filterAnnouncements);
 
-      // Filter when type changes
-      searchType.addEventListener('change', performSearch);
-
-      // Clear search and reset filters
-      clearSearch.addEventListener('click', function() {
-        searchInput.value = '';
-        searchType.value = 'all';
-        clearSearch.style.display = 'none';
-        performSearch();
-      });
-
-      // Remove the search button click handler since we're using real-time search
-      searchButton.style.display = 'none';
-
-      // Initial search to set up the view
-      performSearch();
+      // Initial filter to set up the view
+      filterAnnouncements();
     });
   </script>
 </body>

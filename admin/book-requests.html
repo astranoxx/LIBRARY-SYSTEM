@@ -13,7 +13,7 @@
     <!-- Sidebar -->
     <aside class="sidebar">
       <div class="sidebar-header">
-        <img src="../assets/images/library-logo.png" alt="Library Logo" class="sidebar-logo">
+        <img src="../assets/logo.png" alt="Library Logo" class="sidebar-logo">
         <h3>Library System</h3>
       </div>
       
@@ -617,6 +617,251 @@
           });
         });
       }
+
+      // Get search and filter elements
+      const searchInput = document.querySelector('.search-container input');
+      const statusFilter = document.getElementById('status-filter');
+      const dateFilter = document.getElementById('date-filter');
+      const applyFiltersBtn = document.querySelector('.filter-container .btn-primary');
+      const resetFiltersBtn = document.querySelector('.filter-container .btn-secondary');
+      const tableRows = document.querySelectorAll('.data-table tbody tr');
+
+      // Function to update filter options based on visible data
+      function updateFilterOptions() {
+        // Get unique statuses and dates from visible rows
+        const statuses = new Set();
+        const dates = new Set();
+        
+        tableRows.forEach(row => {
+          if (row.style.display !== 'none') {
+            // Get status
+            const status = row.cells[5].querySelector('.status-badge').textContent.trim();
+            statuses.add(status.toLowerCase());
+            
+            // Get dates
+            const requestDate = row.cells[3].textContent.trim();
+            const pickupDate = row.cells[4].textContent.trim();
+            dates.add(requestDate);
+            dates.add(pickupDate);
+          }
+        });
+
+        // Update status filter options
+        const currentStatus = statusFilter.value;
+        statusFilter.innerHTML = '<option value="all">All Status</option>';
+        
+        // Add options for each unique status
+        Array.from(statuses).sort().forEach(status => {
+          const option = document.createElement('option');
+          option.value = status;
+          option.textContent = status.charAt(0).toUpperCase() + status.slice(1);
+          statusFilter.appendChild(option);
+        });
+
+        // Restore selected status if it still exists
+        if (currentStatus && statuses.has(currentStatus)) {
+          statusFilter.value = currentStatus;
+        }
+
+        // Update date filter options
+        const currentDate = dateFilter.value;
+        dateFilter.innerHTML = '<option value="">All Dates</option>';
+        
+        // Add options for each unique date
+        Array.from(dates).sort().reverse().forEach(date => {
+          const option = document.createElement('option');
+          option.value = date;
+          option.textContent = formatDate(date);
+          dateFilter.appendChild(option);
+        });
+
+        // Restore selected date if it still exists
+        if (currentDate && dates.has(currentDate)) {
+          dateFilter.value = currentDate;
+        }
+      }
+
+      // Function to format date for display
+      function formatDate(dateString) {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        });
+      }
+
+      // Function to perform search and filtering
+      function performSearchAndFilter() {
+        const searchTerm = searchInput.value.toLowerCase().trim();
+        const selectedStatus = statusFilter.value;
+        const selectedDate = dateFilter.value;
+
+        console.log('Filtering with:', {
+          searchTerm,
+          selectedStatus,
+          selectedDate
+        });
+
+        tableRows.forEach(row => {
+          // Get all searchable content from the row
+          const requestId = row.cells[0].textContent.toLowerCase();
+          const studentName = row.cells[1].querySelector('.user-name').textContent.toLowerCase();
+          const studentId = row.cells[1].querySelector('.user-id').textContent.toLowerCase();
+          const bookTitle = row.cells[2].textContent.toLowerCase();
+          const requestDate = row.cells[3].textContent.trim();
+          const pickupDate = row.cells[4].textContent.trim();
+          const status = row.cells[5].querySelector('.status-badge').textContent.toLowerCase();
+
+          // Check if row matches search term
+          const matchesSearch = searchTerm === '' || 
+            requestId.includes(searchTerm) ||
+            studentName.includes(searchTerm) ||
+            studentId.includes(searchTerm) ||
+            bookTitle.includes(searchTerm);
+
+          // Check if row matches status filter
+          const matchesStatus = selectedStatus === 'all' || 
+            status === selectedStatus;
+
+          // Check if row matches date filter
+          const matchesDate = !selectedDate || 
+            requestDate === selectedDate || 
+            pickupDate === selectedDate;
+
+          // Show/hide row based on all conditions
+          row.style.display = (matchesSearch && matchesStatus && matchesDate) ? '' : 'none';
+        });
+
+        // Update filter options based on visible rows
+        updateFilterOptions();
+        
+        // Update pagination visibility
+        updatePaginationVisibility();
+      }
+
+      // Function to update pagination visibility
+      function updatePaginationVisibility() {
+        const visibleRows = Array.from(tableRows).filter(row => row.style.display !== 'none');
+        const pagination = document.querySelector('.pagination');
+        
+        if (pagination) {
+          pagination.style.display = visibleRows.length === 0 ? 'none' : 'flex';
+        }
+
+        // Show "No results" message if needed
+        const noResultsMsg = document.getElementById('no-results-message');
+        if (!noResultsMsg && visibleRows.length === 0) {
+          const message = document.createElement('div');
+          message.id = 'no-results-message';
+          message.className = 'no-results';
+          message.innerHTML = '<i class="fas fa-search"></i><p>No matching requests found</p>';
+          document.querySelector('.card-body').appendChild(message);
+        } else if (noResultsMsg) {
+          noResultsMsg.style.display = visibleRows.length === 0 ? 'flex' : 'none';
+        }
+      }
+
+      // Add event listeners for search and filters
+      searchInput.addEventListener('input', performSearchAndFilter);
+      statusFilter.addEventListener('change', performSearchAndFilter);
+      dateFilter.addEventListener('change', performSearchAndFilter);
+
+      // Apply filters button
+      if (applyFiltersBtn) {
+        applyFiltersBtn.addEventListener('click', function() {
+          console.log('Apply filters button clicked');
+          performSearchAndFilter();
+        });
+      }
+
+      // Reset filters button
+      if (resetFiltersBtn) {
+        resetFiltersBtn.addEventListener('click', function() {
+          console.log('Reset filters button clicked');
+          // Reset all filters to default values
+          searchInput.value = '';
+          statusFilter.value = 'all';
+          dateFilter.value = '';
+          
+          // Show all rows
+          tableRows.forEach(row => row.style.display = '');
+          
+          // Update filter options and pagination
+          updateFilterOptions();
+          updatePaginationVisibility();
+        });
+      }
+
+      // Initialize filters
+      updateFilterOptions();
+      performSearchAndFilter();
+
+      // Add CSS for filters
+      const style = document.createElement('style');
+      style.textContent = `
+        .filter-container {
+          display: flex;
+          gap: 1rem;
+          align-items: center;
+          flex-wrap: wrap;
+        }
+
+        .filter-container label {
+          font-weight: 500;
+          color: var(--neutral-700);
+        }
+
+        .filter-container select,
+        .filter-container input {
+          padding: 0.5rem;
+          border: 1px solid var(--neutral-300);
+          border-radius: 0.375rem;
+          background-color: white;
+          min-width: 150px;
+        }
+
+        .filter-container select:focus,
+        .filter-container input:focus {
+          outline: none;
+          border-color: var(--primary-500);
+          box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+        }
+
+        .no-results {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          padding: 2rem;
+          text-align: center;
+          color: var(--neutral-600);
+        }
+        
+        .no-results i {
+          font-size: 2rem;
+          margin-bottom: 1rem;
+          color: var(--neutral-400);
+        }
+        
+        .no-results p {
+          font-size: 1.1rem;
+          margin: 0;
+        }
+
+        @media (max-width: 768px) {
+          .filter-container {
+            flex-direction: column;
+            align-items: stretch;
+          }
+
+          .filter-container select,
+          .filter-container input {
+            width: 100%;
+          }
+        }
+      `;
+      document.head.appendChild(style);
     });
   </script>
 </body>

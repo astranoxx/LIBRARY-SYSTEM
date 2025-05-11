@@ -137,7 +137,7 @@
                   <td>Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest, Clifford Stein</td>
                   <td>9780262033848</td>
                   <td>Computer Science</td>
-                  <td>San Bartolome</td>
+                  <td data-location="san-bartolome">San Bartolome</td>
                   <td><span class="stock-badge good">15</span></td>
                   <td>
                     <button class="btn-icon" title="View Details"><i class="fas fa-eye"></i></button>
@@ -153,7 +153,7 @@
                   <td>Robert C. Martin</td>
                   <td>9780132350884</td>
                   <td>Computer Science</td>
-                  <td>San Francisco</td>
+                  <td data-location="san-francisco">San Francisco</td>
                   <td><span class="stock-badge low">3</span></td>
                   <td>
                     <button class="btn-icon" title="View Details"><i class="fas fa-eye"></i></button>
@@ -169,7 +169,7 @@
                   <td>Stuart Russell, Peter Norvig</td>
                   <td>9780134610993</td>
                   <td>Computer Science</td>
-                  <td>Batasan</td>
+                  <td data-location="batasan">Batasan</td>
                   <td><span class="stock-badge out">0</span></td>
                   <td>
                     <button class="btn-icon" title="View Details"><i class="fas fa-eye"></i></button>
@@ -185,7 +185,7 @@
                   <td>Abraham Silberschatz, Henry F. Korth, S. Sudarshan</td>
                   <td>9780073523323</td>
                   <td>Computer Science</td>
-                  <td>San Bartolome</td>
+                  <td data-location="san-bartolome">San Bartolome</td>
                   <td><span class="stock-badge good">12</span></td>
                   <td>
                     <button class="btn-icon" title="View Details"><i class="fas fa-eye"></i></button>
@@ -201,7 +201,7 @@
                   <td>James Stewart</td>
                   <td>9781285741550</td>
                   <td>Mathematics</td>
-                  <td>San Francisco</td>
+                  <td data-location="san-francisco">San Francisco</td>
                   <td><span class="stock-badge good">20</span></td>
                   <td>
                     <button class="btn-icon" title="View Details"><i class="fas fa-eye"></i></button>
@@ -569,6 +569,174 @@
           closeProfileModal();
         });
       }
+
+      // Get DOM elements
+      const categoryButtons = document.querySelectorAll('.category-btn');
+      const bookRows = document.querySelectorAll('.data-table tbody tr');
+      const searchInput = document.querySelector('.search-container input');
+      const subjectFilter = document.getElementById('subject-filter');
+      const availabilityFilter = document.getElementById('availability-filter');
+      const applyFiltersBtn = document.querySelector('.filter-container .btn-primary');
+      const resetFiltersBtn = document.querySelector('.filter-container .btn-secondary');
+
+      // Function to check stock status
+      function getStockStatus(stockElement) {
+        const stockText = stockElement.textContent.trim();
+        const stockNumber = parseInt(stockText);
+        
+        if (stockNumber === 0) return 'out-of-stock';
+        if (stockNumber <= 3) return 'low-stock';
+        return 'available';
+      }
+
+      // Function to normalize subject text for comparison
+      function normalizeSubject(subject) {
+        return subject.toLowerCase().replace(/\s+/g, '-');
+      }
+
+      // Function to apply all filters
+      function applyAllFilters() {
+        const searchTerm = searchInput.value.toLowerCase().trim();
+        const selectedSubject = subjectFilter.value;
+        const selectedAvailability = availabilityFilter.value;
+        const activeLocation = document.querySelector('.category-btn.active').dataset.category;
+
+        console.log('Applying filters:', {
+          searchTerm,
+          selectedSubject,
+          selectedAvailability,
+          activeLocation
+        });
+
+        bookRows.forEach(row => {
+          // Get all searchable content
+          const title = row.cells[1].textContent.toLowerCase();
+          const author = row.cells[2].textContent.toLowerCase();
+          const isbn = row.cells[3].textContent.toLowerCase();
+          const subject = normalizeSubject(row.cells[4].textContent);
+          const location = row.cells[5].textContent.toLowerCase();
+          const stockStatus = getStockStatus(row.cells[6].querySelector('.stock-badge'));
+
+          // Check all filter conditions
+          const matchesSearch = searchTerm === '' || 
+            title.includes(searchTerm) ||
+            author.includes(searchTerm) ||
+            isbn.includes(searchTerm) ||
+            subject.includes(searchTerm) ||
+            location.includes(searchTerm);
+
+          const matchesSubject = selectedSubject === 'all' || 
+            normalizeSubject(selectedSubject) === subject;
+
+          const matchesAvailability = selectedAvailability === 'all' || 
+            stockStatus === selectedAvailability;
+
+          const matchesLocation = activeLocation === 'all' || 
+            row.cells[5].dataset.location === activeLocation;
+
+          // Show/hide row based on all conditions
+          row.style.display = (matchesSearch && matchesSubject && matchesAvailability && matchesLocation) ? '' : 'none';
+        });
+
+        // Update the subject filter options based on available subjects
+        updateSubjectFilterOptions();
+      }
+
+      // Function to update subject filter options based on visible rows
+      function updateSubjectFilterOptions() {
+        const visibleSubjects = new Set();
+        bookRows.forEach(row => {
+          if (row.style.display !== 'none') {
+            const subject = row.cells[4].textContent.trim();
+            visibleSubjects.add(subject);
+          }
+        });
+
+        // Update the subject filter options
+        const currentValue = subjectFilter.value;
+        subjectFilter.innerHTML = '<option value="all">All Subjects</option>';
+        
+        // Add options for each unique subject
+        Array.from(visibleSubjects).sort().forEach(subject => {
+          const option = document.createElement('option');
+          option.value = normalizeSubject(subject);
+          option.textContent = subject;
+          subjectFilter.appendChild(option);
+        });
+
+        // Restore the selected value if it still exists
+        if (currentValue && Array.from(visibleSubjects).some(s => normalizeSubject(s) === currentValue)) {
+          subjectFilter.value = currentValue;
+        }
+      }
+
+      // Add event listeners for filters
+      subjectFilter.addEventListener('change', function() {
+        console.log('Subject filter changed to:', this.value);
+        applyAllFilters();
+      });
+
+      availabilityFilter.addEventListener('change', applyAllFilters);
+
+      // Apply filters button
+      if (applyFiltersBtn) {
+        applyFiltersBtn.addEventListener('click', applyAllFilters);
+      }
+
+      // Reset filters button
+      if (resetFiltersBtn) {
+        resetFiltersBtn.addEventListener('click', function() {
+          // Reset all filters to default values
+          searchInput.value = '';
+          subjectFilter.value = 'all';
+          availabilityFilter.value = 'all';
+          
+          // Reset location filter to 'all'
+          categoryButtons.forEach(btn => {
+            if (btn.dataset.category === 'all') {
+              btn.classList.add('active');
+            } else {
+              btn.classList.remove('active');
+            }
+          });
+
+          // Apply the reset filters
+          applyAllFilters();
+        });
+      }
+
+      // Modify the existing search function to use applyAllFilters
+      function performSearch() {
+        applyAllFilters();
+      }
+
+      // Modify the existing filterByLocation function to use applyAllFilters
+      function filterByLocation(location) {
+        console.log('Filtering by location:', location);
+        
+        // Update active button state
+        categoryButtons.forEach(btn => {
+          if (btn.dataset.category === location) {
+            btn.classList.add('active');
+          } else {
+            btn.classList.remove('active');
+          }
+        });
+
+        // Apply all filters including the new location
+        applyAllFilters();
+      }
+
+      // Add event listeners
+      searchInput.addEventListener('input', performSearch);
+      categoryButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          filterByLocation(this.dataset.category);
+        });
+      });
+
+      // Initialize filters
+      applyAllFilters();
     });
   </script>
 </body>

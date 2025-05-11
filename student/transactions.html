@@ -43,8 +43,8 @@
       <!-- Top Navigation -->
       <header class="top-nav">
         <div class="search-container">
-          <input type="text" placeholder="Search...">
-          <button type="button"><i class="fas fa-search"></i></button>
+          <input type="text" id="transactionSearch" placeholder="Search transactions...">
+          <button type="button" id="searchBtn"><i class="fas fa-search"></i></button>
         </div>
         
         <div class="user-menu">
@@ -89,14 +89,16 @@
                 <option value="approved">Approved</option>
                 <option value="in-use">In Use</option>
                 <option value="returned">Returned</option>
+                <option value="overdue">Overdue</option>
+                <option value="completed">Completed</option>
                 <option value="rejected">Rejected</option>
               </select>
               
               <label for="date-filter">Date:</label>
               <input type="date" id="date-filter" class="form-control sm">
               
-              <button class="btn btn-primary sm">Apply Filters</button>
-              <button class="btn btn-secondary sm">Reset</button>
+              <button class="btn btn-primary sm" id="apply-filters">Apply Filters</button>
+              <button class="btn btn-secondary sm" id="reset-filters">Reset</button>
             </div>
           </div>
           
@@ -574,7 +576,168 @@
           closeProfileModal();
         });
       }
+
+      // Search and Filter Functionality
+      const searchInput = document.getElementById('transactionSearch');
+      const statusFilter = document.getElementById('status-filter');
+      const dateFilter = document.getElementById('date-filter');
+      const applyFiltersBtn = document.getElementById('apply-filters');
+      const resetFiltersBtn = document.getElementById('reset-filters');
+      const tabButtons = document.querySelectorAll('.tab-btn');
+      const tabContents = document.querySelectorAll('.tab-content');
+
+      // Function to perform search and filtering
+      function filterTransactions() {
+        const searchTerm = searchInput.value.toLowerCase().trim();
+        const selectedStatus = statusFilter.value.toLowerCase();
+        const selectedDate = dateFilter.value;
+        const activeTab = document.querySelector('.tab-btn.active').dataset.tab;
+        const activeTable = document.querySelector(`#${activeTab}-tab table tbody`);
+        
+        if (!activeTable) return;
+
+        const rows = activeTable.querySelectorAll('tr');
+        let hasResults = false;
+
+        rows.forEach(row => {
+          let matchesSearch = false;
+          let matchesStatus = true;
+          let matchesDate = true;
+
+          // Search term matching
+          const cells = row.querySelectorAll('td');
+          cells.forEach(cell => {
+            if (cell.textContent.toLowerCase().includes(searchTerm)) {
+              matchesSearch = true;
+            }
+          });
+
+          // Status matching
+          if (selectedStatus !== 'all') {
+            const statusCell = row.querySelector('.status-badge');
+            if (statusCell) {
+              // Normalize status text for comparison
+              const statusText = statusCell.textContent.toLowerCase().replace(/\s+/g, '-');
+              matchesStatus = statusText === selectedStatus;
+              
+              // Special handling for "in-use" status
+              if (selectedStatus === 'in-use' && statusText === 'in use') {
+                matchesStatus = true;
+              }
+            }
+          }
+
+          // Date matching
+          if (selectedDate) {
+            const dateCell = row.querySelector('td:nth-child(3)'); // Date column
+            if (dateCell) {
+              matchesDate = dateCell.textContent === selectedDate;
+            }
+          }
+
+          // Show/hide row based on all filters
+          if (matchesSearch && matchesStatus && matchesDate) {
+            row.style.display = '';
+            hasResults = true;
+          } else {
+            row.style.display = 'none';
+          }
+        });
+
+        // Show/hide no results message
+        let noResultsRow = activeTable.querySelector('.no-results-row');
+        if (!noResultsRow) {
+          noResultsRow = document.createElement('tr');
+          noResultsRow.className = 'no-results-row';
+          noResultsRow.innerHTML = `
+            <td colspan="${activeTable.querySelector('tr').cells.length}" style="text-align: center; padding: 20px;">
+              No matching transactions found.
+            </td>
+          `;
+          activeTable.appendChild(noResultsRow);
+        }
+        noResultsRow.style.display = hasResults ? 'none' : 'table-row';
+
+        // Debug log
+        console.log('Filtering with status:', selectedStatus);
+        console.log('Found results:', hasResults);
+      }
+
+      // Event Listeners
+      searchInput.addEventListener('input', filterTransactions);
+      statusFilter.addEventListener('change', filterTransactions);
+      dateFilter.addEventListener('change', filterTransactions);
+      applyFiltersBtn.addEventListener('click', filterTransactions);
+
+      resetFiltersBtn.addEventListener('click', function() {
+        searchInput.value = '';
+        statusFilter.value = 'all';
+        dateFilter.value = '';
+        filterTransactions();
+      });
+
+      // Tab switching with filter preservation
+      tabButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          // Remove active class from all buttons and contents
+          tabButtons.forEach(btn => btn.classList.remove('active'));
+          tabContents.forEach(content => content.classList.remove('active'));
+          
+          // Add active class to clicked button
+          this.classList.add('active');
+          
+          // Show corresponding tab content
+          const tabId = `${this.dataset.tab}-tab`;
+          document.getElementById(tabId).classList.add('active');
+          
+          // Reapply filters for the new tab
+          filterTransactions();
+        });
+      });
+
+      // Initial filter application
+      filterTransactions();
     });
   </script>
+
+  <style>
+    /* Add these styles for the search and filter functionality */
+    .filter-container {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .filter-container label {
+      font-weight: 500;
+      color: var(--neutral-700);
+      margin-bottom: 0;
+    }
+
+    .filter-container select,
+    .filter-container input {
+      min-width: 150px;
+    }
+
+    .no-results-row {
+      background-color: var(--neutral-50);
+      color: var(--neutral-600);
+      font-style: italic;
+    }
+
+    @media (max-width: 768px) {
+      .filter-container {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .filter-container select,
+      .filter-container input,
+      .filter-container button {
+        width: 100%;
+      }
+    }
+  </style>
 </body>
 </html>

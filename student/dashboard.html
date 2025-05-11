@@ -43,8 +43,8 @@
       <!-- Top Navigation -->
       <header class="top-nav">
         <div class="search-container">
-          <input type="text" placeholder="Search...">
-          <button type="button"><i class="fas fa-search"></i></button>
+          <input type="text" id="dashboardSearch" placeholder="Search">
+          <button type="button" id="searchBtn"><i class="fas fa-search"></i></button>
         </div>
         
         <div class="user-menu">
@@ -149,7 +149,6 @@
                   <td><span class="status-badge approved">Approved</span></td>
                   <td>
                     <button class="btn-icon" title="View Details"><i class="fas fa-eye"></i></button>
-                    <button class="btn-icon" title="Edit"><i class="fas fa-edit"></i></button>
                     <button class="btn-icon" title="Cancel"><i class="fas fa-times"></i></button>
                   </td>
                 </tr>
@@ -265,6 +264,354 @@
     </div>
   </div>
 
+  <!-- View Details Modal -->
+  <div class="modal" id="viewDetailsModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Transaction Details</h2>
+        <button class="close-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="transaction-details">
+          <div class="detail-item">
+            <strong>Type:</strong> <span id="detail-type"></span>
+          </div>
+          <div class="detail-item">
+            <strong>Title/Room:</strong> <span id="detail-title"></span>
+          </div>
+          <div class="detail-item">
+            <strong>Date:</strong> <span id="detail-date"></span>
+          </div>
+          <div class="detail-item">
+            <strong>Status:</strong> <span id="detail-status"></span>
+          </div>
+          <!-- Book-specific details -->
+          <div class="detail-item book-details">
+            <strong>Due Date:</strong> <span id="detail-due-date"></span>
+          </div>
+          <div class="detail-item book-details">
+            <strong>Fine:</strong> <span id="detail-fine"></span>
+          </div>
+          <!-- Room-specific details -->
+          <div class="detail-item room-details" style="display: none;">
+            <strong>Time:</strong> <span id="detail-time"></span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary close-modal">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cancel Confirmation Modal -->
+  <div class="modal" id="cancelConfirmationModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Confirm Cancellation</h2>
+        <button class="close-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to cancel this transaction? This action cannot be undone.</p>
+        <div class="transaction-summary">
+          <p><strong>Type:</strong> <span id="cancel-type"></span></p>
+          <p><strong>Title/Room:</strong> <span id="cancel-title"></span></p>
+          <p><strong>Date:</strong> <span id="cancel-date"></span></p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary close-modal">No, Keep It</button>
+        <button class="btn btn-danger" id="confirm-cancel">Yes, Cancel Transaction</button>
+      </div>
+    </div>
+  </div>
+
   <script src="../js/student.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const searchInput = document.getElementById('dashboardSearch');
+      const searchBtn = document.getElementById('searchBtn');
+      const transactionTable = document.querySelector('.data-table tbody');
+      const announcementList = document.querySelector('.announcement-list');
+
+      function performSearch() {
+        const searchTerm = searchInput.value.toLowerCase().trim();
+        
+        // Search in transactions table
+        if (transactionTable) {
+          const rows = transactionTable.querySelectorAll('tr');
+          let hasTransactionResults = false;
+
+          rows.forEach(row => {
+            const type = row.querySelector('td:nth-child(1)').textContent.toLowerCase();
+            const title = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+            const date = row.querySelector('td:nth-child(3)').textContent.toLowerCase();
+            const status = row.querySelector('td:nth-child(4)').textContent.toLowerCase();
+
+            const matchesSearch = searchTerm === '' || 
+              type.includes(searchTerm) || 
+              title.includes(searchTerm) || 
+              date.includes(searchTerm) || 
+              status.includes(searchTerm);
+
+            if (matchesSearch) {
+              row.style.display = '';
+              hasTransactionResults = true;
+            } else {
+              row.style.display = 'none';
+            }
+          });
+
+          // Show/hide "No results" message for transactions
+          const noTransactionResults = document.getElementById('noTransactionResults');
+          if (noTransactionResults) {
+            noTransactionResults.style.display = hasTransactionResults ? 'none' : 'block';
+          }
+        }
+
+        // Search in announcements
+        if (announcementList) {
+          const announcements = announcementList.querySelectorAll('.announcement-item');
+          let hasAnnouncementResults = false;
+
+          announcements.forEach(announcement => {
+            const title = announcement.querySelector('h3').textContent.toLowerCase();
+            const content = announcement.querySelector('p').textContent.toLowerCase();
+            const date = announcement.querySelector('.announcement-date').textContent.toLowerCase();
+
+            const matchesSearch = searchTerm === '' || 
+              title.includes(searchTerm) || 
+              content.includes(searchTerm) || 
+              date.includes(searchTerm);
+
+            if (matchesSearch) {
+              announcement.style.display = '';
+              hasAnnouncementResults = true;
+            } else {
+              announcement.style.display = 'none';
+            }
+          });
+
+          // Show/hide "No results" message for announcements
+          const noAnnouncementResults = document.getElementById('noAnnouncementResults');
+          if (noAnnouncementResults) {
+            noAnnouncementResults.style.display = hasAnnouncementResults ? 'none' : 'block';
+          }
+        }
+      }
+
+      // Add event listeners for search
+      searchInput.addEventListener('input', performSearch);
+      searchBtn.addEventListener('click', performSearch);
+
+      // Add "No results" messages to the DOM
+      if (transactionTable) {
+        const noTransactionResults = document.createElement('tr');
+        noTransactionResults.id = 'noTransactionResults';
+        noTransactionResults.style.display = 'none';
+        noTransactionResults.innerHTML = `
+          <td colspan="5" style="text-align: center; padding: 20px;">
+            No matching transactions found.
+          </td>
+        `;
+        transactionTable.appendChild(noTransactionResults);
+      }
+
+      if (announcementList) {
+        const noAnnouncementResults = document.createElement('div');
+        noAnnouncementResults.id = 'noAnnouncementResults';
+        noAnnouncementResults.style.display = 'none';
+        noAnnouncementResults.className = 'announcement-item';
+        noAnnouncementResults.innerHTML = `
+          <p style="text-align: center; color: #666; font-style: italic;">
+            No matching announcements found.
+          </p>
+        `;
+        announcementList.appendChild(noAnnouncementResults);
+      }
+
+      // Function to handle view details
+      function handleViewDetails(row) {
+        const type = row.querySelector('td:nth-child(1)').textContent.trim();
+        const title = row.querySelector('td:nth-child(2)').textContent.trim();
+        const date = row.querySelector('td:nth-child(3)').textContent.trim();
+        const status = row.querySelector('td:nth-child(4) .status-badge').textContent.trim();
+        
+        // Populate the common details
+        document.getElementById('detail-type').textContent = type;
+        document.getElementById('detail-title').textContent = title;
+        document.getElementById('detail-date').textContent = date;
+        document.getElementById('detail-status').textContent = status;
+        
+        // Show/hide and populate type-specific details
+        const bookDetails = document.querySelectorAll('.book-details');
+        const roomDetails = document.querySelectorAll('.room-details');
+        
+        if (type.toLowerCase().includes('room')) {
+          // Hide book details, show room details
+          bookDetails.forEach(el => el.style.display = 'none');
+          roomDetails.forEach(el => el.style.display = 'block');
+          
+          // Set room time (you can adjust this based on your data structure)
+          const time = row.dataset.time || 'Not set';
+          document.getElementById('detail-time').textContent = time;
+        } else {
+          // Hide room details, show book details
+          bookDetails.forEach(el => el.style.display = 'block');
+          roomDetails.forEach(el => el.style.display = 'none');
+          
+          // Set book-specific details
+          const dueDate = row.dataset.dueDate || 'Not set';
+          const fine = row.dataset.fine || '₱0.00';
+          document.getElementById('detail-due-date').textContent = dueDate;
+          document.getElementById('detail-fine').textContent = fine;
+        }
+        
+        // Show the modal
+        document.getElementById('viewDetailsModal').classList.add('active');
+      }
+
+      // Function to handle cancel
+      function handleCancel(row) {
+        const type = row.querySelector('td:nth-child(1)').textContent.trim();
+        const title = row.querySelector('td:nth-child(2)').textContent.trim();
+        const date = row.querySelector('td:nth-child(3)').textContent.trim();
+        
+        // Populate the cancel confirmation modal
+        document.getElementById('cancel-type').textContent = type;
+        document.getElementById('cancel-title').textContent = title;
+        document.getElementById('cancel-date').textContent = date;
+        
+        // Store the row reference for cancellation
+        document.getElementById('confirm-cancel').dataset.rowId = row.dataset.id;
+        
+        // Show the modal
+        document.getElementById('cancelConfirmationModal').classList.add('active');
+      }
+
+      // Update action buttons event listeners (remove edit case)
+      const actionButtons = document.querySelectorAll('.btn-icon');
+      actionButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          const row = this.closest('tr');
+          const action = this.getAttribute('title');
+          
+          switch(action) {
+            case 'View Details':
+              handleViewDetails(row);
+              break;
+            case 'Cancel':
+              handleCancel(row);
+              break;
+          }
+        });
+      });
+
+      // Handle cancel confirmation
+      document.getElementById('confirm-cancel').addEventListener('click', function() {
+        const rowId = this.dataset.rowId;
+        const row = document.querySelector(`tr[data-id="${rowId}"]`);
+        
+        if (row) {
+          // Update status to cancelled
+          const statusBadge = row.querySelector('.status-badge');
+          if (statusBadge) {
+            statusBadge.textContent = 'Cancelled';
+            statusBadge.className = 'status-badge rejected';
+          }
+          
+          // Disable action buttons
+          const actionButtons = row.querySelectorAll('.btn-icon');
+          actionButtons.forEach(button => {
+            button.disabled = true;
+            button.style.opacity = '0.5';
+            button.style.cursor = 'not-allowed';
+          });
+          
+          // Close modal
+          document.getElementById('cancelConfirmationModal').classList.remove('active');
+          alert('Transaction cancelled successfully!');
+        }
+      });
+
+      // Close modals
+      document.querySelectorAll('.close-modal').forEach(button => {
+        button.addEventListener('click', function() {
+          document.querySelectorAll('.modal').forEach(modal => {
+            modal.classList.remove('active');
+          });
+        });
+      });
+
+      // Close modals when clicking outside
+      document.querySelectorAll('.modal').forEach(modal => {
+        modal.addEventListener('click', function(e) {
+          if (e.target === this) {
+            this.classList.remove('active');
+          }
+        });
+      });
+    });
+  </script>
+
+  <style>
+    /* Add these styles for the modals and transaction details */
+    .transaction-details {
+      padding: 20px;
+    }
+
+    .detail-item {
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .detail-item:last-child {
+      border-bottom: none;
+    }
+
+    .transaction-summary {
+      background-color: #f8f9fa;
+      padding: 15px;
+      border-radius: 4px;
+      margin-top: 15px;
+    }
+
+    .transaction-summary p {
+      margin: 5px 0;
+    }
+
+    .modal.active {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .status-badge.rejected {
+      background-color: #fee2e2;
+      color: #dc2626;
+    }
+
+    .btn-icon:disabled {
+      pointer-events: none;
+    }
+
+    /* Add styles for type-specific details */
+    .book-details, .room-details {
+      transition: all 0.3s ease;
+    }
+    
+    .detail-item {
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .detail-item:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+  </style>
 </body>
 </html>

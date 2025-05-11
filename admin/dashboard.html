@@ -7,6 +7,57 @@
   <link rel="stylesheet" href="../css/main.css">
   <link rel="stylesheet" href="../css/admin.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .search-container {
+      position: relative;
+      width: 300px;
+    }
+
+    .search-wrapper {
+      position: relative;
+      width: 100%;
+    }
+
+    .search-input-wrapper {
+      position: relative;
+      width: 100%;
+    }
+
+    .search-input-wrapper input {
+      width: 100%;
+      padding: 8px 35px 8px 12px;
+      border: 1px solid var(--neutral-300);
+      border-radius: 6px;
+      font-size: 14px;
+      transition: all 0.2s ease;
+    }
+
+    .search-input-wrapper input:focus {
+      outline: none;
+      border-color: var(--primary-500);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    .search-icon {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--neutral-500);
+      pointer-events: none;
+    }
+
+    .search-wrapper.focused input {
+      border-color: var(--primary-500);
+    }
+
+    @media (max-width: 768px) {
+      .search-container {
+        width: 100%;
+        margin-right: 10px;
+      }
+    }
+  </style>
 </head>
 <body>
   <div class="app-container">
@@ -46,8 +97,12 @@
       <!-- Top Navigation -->
       <header class="top-nav">
         <div class="search-container">
-          <input type="text" placeholder="Search...">
-          <button type="button"><i class="fas fa-search"></i></button>
+          <div class="search-wrapper">
+            <div class="search-input-wrapper">
+              <input type="text" id="requestSearchInput" placeholder="Search requests...">
+            </div>
+            <i class="fas fa-search search-icon"></i>
+          </div>
         </div>
         
         <div class="user-menu">
@@ -532,6 +587,73 @@
           closeProfileModal();
         });
       }
+
+      // Add search functionality for requests
+      const requestSearchInput = document.getElementById('requestSearchInput');
+
+      function performRequestSearch() {
+        const searchTerm = requestSearchInput.value.toLowerCase().trim();
+        const bookRows = document.querySelectorAll('.book-request');
+        const roomRows = document.querySelectorAll('.room-request');
+
+        // If search is empty, show all rows
+        if (searchTerm === '') {
+          bookRows.forEach(row => row.style.display = '');
+          roomRows.forEach(row => row.style.display = '');
+          return;
+        }
+
+        // Search through book requests
+        bookRows.forEach(row => {
+          const member = row.cells[0].textContent.toLowerCase();
+          const idNumber = row.cells[1].textContent.toLowerCase();
+          const bookTitle = row.cells[2].textContent.toLowerCase();
+          const requestDate = row.cells[3].textContent.toLowerCase();
+
+          const isVisible = 
+            member.includes(searchTerm) || 
+            idNumber.includes(searchTerm) || 
+            bookTitle.includes(searchTerm) || 
+            requestDate.includes(searchTerm);
+
+          row.style.display = isVisible ? '' : 'none';
+        });
+
+        // Search through room requests
+        roomRows.forEach(row => {
+          const member = row.cells[0].textContent.toLowerCase();
+          const idNumber = row.cells[1].textContent.toLowerCase();
+          const room = row.cells[2].textContent.toLowerCase();
+          const date = row.cells[3].textContent.toLowerCase();
+          const time = row.cells[4].textContent.toLowerCase();
+          const purpose = row.cells[5].textContent.toLowerCase();
+
+          const isVisible = 
+            member.includes(searchTerm) || 
+            idNumber.includes(searchTerm) || 
+            room.includes(searchTerm) || 
+            date.includes(searchTerm) || 
+            time.includes(searchTerm) || 
+            purpose.includes(searchTerm);
+
+          row.style.display = isVisible ? '' : 'none';
+        });
+      }
+
+      // Add event listeners for search
+      requestSearchInput.addEventListener('input', performRequestSearch);
+
+      // Add focus styles
+      requestSearchInput.addEventListener('focus', function() {
+        document.querySelector('.search-wrapper').classList.add('focused');
+      });
+
+      requestSearchInput.addEventListener('blur', function() {
+        document.querySelector('.search-wrapper').classList.remove('focused');
+      });
+
+      // Initial search to set up the view
+      performRequestSearch();
     });
   </script>
 </body>
