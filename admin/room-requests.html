@@ -180,11 +180,82 @@
       </div>
     </main>
     
+    <!-- Edit Profile Modal -->
+    <div class="modal" id="profile-modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Edit Profile</h2>
+          <button class="close-modal">&times;</button>
+        </div>
+        
+        <div class="modal-body">
+          <form id="profile-form">
+            <div class="profile-photo-container">
+              <img src="../assets/images/default-profile.png" alt="Profile Photo" id="profile-preview">
+              <div class="photo-upload">
+                <label for="profile-photo" class="btn btn-secondary">
+                  <i class="fas fa-camera"></i> Change Photo
+                </label>
+                <input type="file" id="profile-photo" accept="image/*" hidden>
+                <p class="help-text">Max file size: 2MB. Supported formats: JPG, PNG</p>
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="profile-id">Student/Employee Number</label>
+              <div class="disabled-field">
+                <input type="text" id="profile-id" class="form-control" disabled readonly>
+                <i class="fas fa-lock"></i>
+              </div>
+              <p class="help-text">This is your permanent identification number and cannot be changed</p>
+            </div>
+            
+            <div class="form-group">
+              <label>Name</label>
+              <div class="name-fields">
+                <div class="form-group">
+                  <input type="text" id="profile-lastname" class="form-control" placeholder="Last Name" required>
+                </div>
+                <div class="form-group">
+                  <input type="text" id="profile-firstname" class="form-control" placeholder="First Name" required>
+                </div>
+                <div class="form-group">
+                  <input type="text" id="profile-middlename" class="form-control" placeholder="Middle Name (Optional)">
+                </div>
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="profile-email">Email Address</label>
+              <input type="email" id="profile-email" class="form-control" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="profile-current-password">Current Password</label>
+              <input type="password" id="profile-current-password" class="form-control" required>
+              <p class="help-text">Enter your current password to confirm changes</p>
+            </div>
+            
+            <div class="form-group">
+              <label for="profile-new-password">New Password</label>
+              <input type="password" id="profile-new-password" class="form-control" minlength="8">
+              <p class="help-text">Leave blank to keep current password. Minimum 8 characters.</p>
+            </div>
+          </form>
+        </div>
+        
+        <div class="modal-footer">
+          <button class="btn btn-secondary" id="cancel-profile-edit">Cancel</button>
+          <button class="btn btn-primary" id="save-profile" form="profile-form">Save Changes</button>
+        </div>
+      </div>
+    </div>
+
     <!-- Request Details Modal -->
     <div class="modal" id="request-modal">
       <div class="modal-content">
         <div class="modal-header">
-          <h2>Request Details</h2>
+          <h2>Room Request Details</h2>
           <button class="close-modal">&times;</button>
         </div>
         
@@ -213,23 +284,23 @@
             </div>
             
             <div class="detail-section">
-              <h3>Book Information</h3>
+              <h3>Room Information</h3>
               <div class="detail-grid">
                 <div class="detail-item">
-                  <label>Title:</label>
-                  <span id="book-title">Introduction to Database Systems</span>
+                  <label>Room:</label>
+                  <span id="room-name">Room 101</span>
                 </div>
                 <div class="detail-item">
-                  <label>Author:</label>
-                  <span id="book-author">C. J. Date</span>
-                </div>
-                <div class="detail-item">
-                  <label>ISBN:</label>
-                  <span id="book-isbn">9780321197849</span>
+                  <label>Capacity:</label>
+                  <span id="room-capacity">30 persons</span>
                 </div>
                 <div class="detail-item">
                   <label>Location:</label>
-                  <span id="book-location">San Bartolome</span>
+                  <span id="room-location">Main Building</span>
+                </div>
+                <div class="detail-item">
+                  <label>Facilities:</label>
+                  <span id="room-facilities">Projector, Whiteboard, Air Conditioning</span>
                 </div>
               </div>
             </div>
@@ -242,16 +313,20 @@
                   <span id="request-date">2023-09-15</span>
                 </div>
                 <div class="detail-item">
-                  <label>Pickup Date:</label>
-                  <span id="pickup-date">2023-09-18</span>
+                  <label>Reservation Date:</label>
+                  <span id="reservation-date">2023-09-18</span>
+                </div>
+                <div class="detail-item">
+                  <label>Time Slot:</label>
+                  <span id="time-slot">1:00 PM - 2:00 PM</span>
                 </div>
                 <div class="detail-item">
                   <label>Status:</label>
                   <span id="request-status" class="status-badge pending">Pending</span>
                 </div>
                 <div class="detail-item full-width">
-                  <label>Notes:</label>
-                  <p id="request-notes">Need this book for my database management course project.</p>
+                  <label>Purpose:</label>
+                  <p id="request-purpose">Group study session for Database Management course.</p>
                 </div>
               </div>
             </div>
@@ -270,5 +345,322 @@
   </div>
 
   <script src="../js/admin.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize user data
+      const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+      if (currentUser) {
+        // Update user name in the header
+        const userNameElements = document.querySelectorAll('#user-name');
+        userNameElements.forEach(element => {
+          element.textContent = currentUser.name || 'User';
+        });
+        
+        // Update profile image if exists
+        const userProfileImg = document.getElementById('user-profile-img');
+        if (currentUser.profileImage && userProfileImg) {
+          userProfileImg.src = currentUser.profileImage;
+        }
+      }
+
+      // Edit Profile Modal Functionality
+      const editProfileBtn = document.getElementById('edit-profile');
+      const profileModal = document.getElementById('profile-modal');
+      const closeModalButtons = document.querySelectorAll('.close-modal');
+      const cancelProfileEdit = document.getElementById('cancel-profile-edit');
+      const saveProfileBtn = document.getElementById('save-profile');
+      const profilePhoto = document.getElementById('profile-photo');
+      const profilePreview = document.getElementById('profile-preview');
+      const userProfileImg = document.getElementById('user-profile-img');
+
+      // Open modal
+      if (editProfileBtn && profileModal) {
+        editProfileBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          console.log('Edit profile button clicked in room requests page');
+          
+          // Get current user data
+          const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+          if (!currentUser) {
+            console.error('No user data found in localStorage');
+            return;
+          }
+          
+          // Populate modal with user data
+          document.getElementById('profile-id').value = currentUser.id || '';
+          document.getElementById('profile-lastname').value = currentUser.lastName || '';
+          document.getElementById('profile-firstname').value = currentUser.firstName || '';
+          document.getElementById('profile-middlename').value = currentUser.middleName || '';
+          document.getElementById('profile-email').value = currentUser.email || '';
+          
+          // Set profile image if exists
+          if (currentUser.profileImage) {
+            profilePreview.src = currentUser.profileImage;
+          }
+          
+          // Show modal
+          profileModal.classList.add('active');
+        });
+      }
+
+      // Close modal function
+      function closeProfileModal() {
+        profileModal.classList.remove('active');
+        // Clear password fields
+        document.getElementById('profile-current-password').value = '';
+        document.getElementById('profile-new-password').value = '';
+      }
+
+      // Close modal event listeners
+      if (closeModalButtons.length > 0) {
+        closeModalButtons.forEach(button => {
+          button.addEventListener('click', closeProfileModal);
+        });
+      }
+
+      if (cancelProfileEdit) {
+        cancelProfileEdit.addEventListener('click', closeProfileModal);
+      }
+
+      // Close modal when clicking outside
+      profileModal.addEventListener('click', function(e) {
+        if (e.target === profileModal) {
+          closeProfileModal();
+        }
+      });
+
+      // Profile photo upload
+      if (profilePhoto && profilePreview) {
+        profilePhoto.addEventListener('change', function() {
+          const file = this.files[0];
+          if (file) {
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+              const imageData = e.target.result;
+              profilePreview.src = imageData;
+              // Also update the header profile image
+              if (userProfileImg) {
+                userProfileImg.src = imageData;
+              }
+              
+              // Update user data in localStorage
+              const currentUser = JSON.parse(localStorage.getItem('currentUser')) || {};
+              currentUser.profileImage = imageData;
+              localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            };
+            
+            reader.readAsDataURL(file);
+          }
+        });
+      }
+
+      // Save profile changes
+      if (saveProfileBtn) {
+        saveProfileBtn.addEventListener('click', function() {
+          const lastName = document.getElementById('profile-lastname').value.trim();
+          const firstName = document.getElementById('profile-firstname').value.trim();
+          const middleName = document.getElementById('profile-middlename').value.trim();
+          const email = document.getElementById('profile-email').value.trim();
+          const currentPassword = document.getElementById('profile-current-password').value;
+          const newPassword = document.getElementById('profile-new-password').value;
+          
+          // Validation
+          if (!lastName || !firstName || !email || !currentPassword) {
+            alert('Please fill in all required fields.');
+            return;
+          }
+          
+          // Email validation
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (!emailRegex.test(email)) {
+            alert('Please enter a valid email address.');
+            return;
+          }
+          
+          // Get current user data
+          const currentUser = JSON.parse(localStorage.getItem('currentUser')) || {};
+          
+          // Update user data
+          currentUser.lastName = lastName;
+          currentUser.firstName = firstName;
+          currentUser.middleName = middleName;
+          currentUser.email = email;
+          currentUser.name = `${firstName} ${lastName}`;
+          
+          // Save updated user data
+          localStorage.setItem('currentUser', JSON.stringify(currentUser));
+          
+          // Update displayed name
+          const userNameElements = document.querySelectorAll('#user-name');
+          userNameElements.forEach(element => {
+            element.textContent = currentUser.name;
+          });
+          
+          // Show success message
+          alert('Profile updated successfully!');
+          
+          // Close modal and clear fields
+          closeProfileModal();
+        });
+      }
+
+      // Request handling functionality
+      const approveButtons = document.querySelectorAll('.btn-success');
+      const rejectButtons = document.querySelectorAll('.btn-danger');
+      const viewButtons = document.querySelectorAll('.btn-icon[title="View Details"]');
+      const requestModal = document.getElementById('request-modal');
+
+      // View request details
+      if (viewButtons.length > 0 && requestModal) {
+        viewButtons.forEach(button => {
+          button.addEventListener('click', function() {
+            const row = this.closest('tr');
+            const cells = row.cells;
+            
+            // Populate modal with request details
+            document.getElementById('student-name').textContent = cells[1].querySelector('.user-name').textContent;
+            document.getElementById('student-id').textContent = cells[1].querySelector('.user-id').textContent;
+            document.getElementById('room-name').textContent = cells[2].textContent;
+            document.getElementById('request-date').textContent = cells[3].textContent;
+            document.getElementById('reservation-date').textContent = cells[4].textContent;
+            document.getElementById('time-slot').textContent = cells[4].textContent;
+            
+            // Update status badge
+            const statusBadge = document.getElementById('request-status');
+            const currentStatus = cells[5].querySelector('.status-badge').textContent.toLowerCase();
+            statusBadge.className = 'status-badge ' + currentStatus;
+            statusBadge.textContent = currentStatus.charAt(0).toUpperCase() + currentStatus.slice(1);
+            
+            // Show/hide action buttons based on status
+            const actionButtons = document.querySelector('.action-buttons');
+            if (actionButtons) {
+              actionButtons.style.display = currentStatus === 'pending' ? 'flex' : 'none';
+            }
+            
+            // Show modal
+            requestModal.style.display = 'block';
+          });
+        });
+      }
+
+      // Close request modal
+      const closeRequestModal = document.querySelector('#request-modal .close-modal');
+      if (closeRequestModal) {
+        closeRequestModal.addEventListener('click', function() {
+          requestModal.style.display = 'none';
+        });
+      }
+
+      // Close request modal when clicking outside
+      if (requestModal) {
+        requestModal.addEventListener('click', function(e) {
+          if (e.target === requestModal) {
+            requestModal.style.display = 'none';
+          }
+        });
+      }
+
+      // Handle approve/reject actions
+      if (approveButtons.length > 0) {
+        approveButtons.forEach(button => {
+          button.addEventListener('click', function() {
+            const row = this.closest('tr');
+            const requestId = row.cells[0].textContent;
+            
+            if (confirm(`Are you sure you want to approve request ${requestId}?`)) {
+              // Update status badge
+              const statusCell = row.cells[5];
+              statusCell.innerHTML = '<span class="status-badge approved">Approved</span>';
+              
+              // Update action buttons
+              const actionCell = row.cells[6];
+              actionCell.innerHTML = `
+                <button class="btn-icon" title="View Details"><i class="fas fa-eye"></i></button>
+                <button class="btn btn-primary btn-sm">Mark as Completed</button>
+              `;
+              
+              // Close modal if open
+              if (requestModal) {
+                requestModal.style.display = 'none';
+              }
+            }
+          });
+        });
+      }
+
+      if (rejectButtons.length > 0) {
+        rejectButtons.forEach(button => {
+          button.addEventListener('click', function() {
+            const row = this.closest('tr');
+            const requestId = row.cells[0].textContent;
+            
+            if (confirm(`Are you sure you want to reject request ${requestId}?`)) {
+              // Update status badge
+              const statusCell = row.cells[5];
+              statusCell.innerHTML = '<span class="status-badge rejected">Rejected</span>';
+              
+              // Update action buttons
+              const actionCell = row.cells[6];
+              actionCell.innerHTML = `
+                <button class="btn-icon" title="View Details"><i class="fas fa-eye"></i></button>
+              `;
+              
+              // Close modal if open
+              if (requestModal) {
+                requestModal.style.display = 'none';
+              }
+            }
+          });
+        });
+      }
+
+      // Search functionality
+      const searchInput = document.querySelector('.search-container input');
+      const searchButton = document.querySelector('.search-container button');
+      const table = document.querySelector('.data-table tbody');
+
+      function performSearch() {
+        const searchTerm = searchInput.value.toLowerCase().trim();
+        const rows = table.getElementsByTagName('tr');
+
+        for (let row of rows) {
+          const studentName = row.cells[1].querySelector('.user-name').textContent.toLowerCase();
+          const studentId = row.cells[1].querySelector('.user-id').textContent.toLowerCase();
+          const roomName = row.cells[2].textContent.toLowerCase();
+          const requestDate = row.cells[3].textContent.toLowerCase();
+          const timeSlot = row.cells[4].textContent.toLowerCase();
+          
+          const isVisible = studentName.includes(searchTerm) || 
+                           studentId.includes(searchTerm) || 
+                           roomName.includes(searchTerm) ||
+                           requestDate.includes(searchTerm) ||
+                           timeSlot.includes(searchTerm);
+          
+          row.style.display = isVisible ? '' : 'none';
+        }
+      }
+
+      if (searchInput && searchButton && table) {
+        searchButton.addEventListener('click', performSearch);
+        searchInput.addEventListener('keypress', function(e) {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            performSearch();
+          }
+        });
+
+        // Clear search when input is empty
+        searchInput.addEventListener('input', function() {
+          if (this.value.trim() === '') {
+            const rows = table.getElementsByTagName('tr');
+            for (let row of rows) {
+              row.style.display = '';
+            }
+          }
+        });
+      }
+    });
+  </script>
 </body>
 </html>

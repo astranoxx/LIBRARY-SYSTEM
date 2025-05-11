@@ -338,239 +338,238 @@
     </div>
   </div>
 
+  <!-- Profile Edit Modal -->
+  <div class="modal" id="profile-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Edit Profile</h2>
+        <button class="close-modal">&times;</button>
+      </div>
+      
+      <div class="modal-body">
+        <form id="profile-form">
+          <div class="profile-photo-container">
+            <img src="../assets/images/default-profile.png" alt="Profile Photo" id="profile-preview">
+            <div class="photo-upload">
+              <label for="profile-photo" class="btn btn-secondary">
+                <i class="fas fa-camera"></i> Change Photo
+              </label>
+              <input type="file" id="profile-photo" accept="image/*" hidden>
+              <p class="help-text">Max file size: 2MB. Supported formats: JPG, PNG</p>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="profile-id">Student/Employee Number</label>
+            <div class="disabled-field">
+              <input type="text" id="profile-id" class="form-control" disabled readonly>
+              <i class="fas fa-lock"></i>
+            </div>
+            <p class="help-text">This is your permanent identification number and cannot be changed</p>
+          </div>
+          
+          <div class="form-group">
+            <label>Name</label>
+            <div class="name-fields">
+              <div class="form-group">
+                <input type="text" id="profile-lastname" class="form-control" placeholder="Last Name" required>
+              </div>
+              <div class="form-group">
+                <input type="text" id="profile-firstname" class="form-control" placeholder="First Name" required>
+              </div>
+              <div class="form-group">
+                <input type="text" id="profile-middlename" class="form-control" placeholder="Middle Name (Optional)">
+              </div>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="profile-email">Email Address</label>
+            <input type="email" id="profile-email" class="form-control" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="profile-current-password">Current Password</label>
+            <input type="password" id="profile-current-password" class="form-control" required>
+            <p class="help-text">Enter your current password to confirm changes</p>
+          </div>
+          
+          <div class="form-group">
+            <label for="profile-new-password">New Password</label>
+            <input type="password" id="profile-new-password" class="form-control" minlength="8">
+            <p class="help-text">Leave blank to keep current password. Minimum 8 characters.</p>
+          </div>
+        </form>
+      </div>
+      
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="cancel-profile-edit">Cancel</button>
+        <button class="btn btn-primary" id="save-profile" form="profile-form">Save Changes</button>
+      </div>
+    </div>
+  </div>
+
   <script src="../js/admin.js"></script>
   <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    // Get all category buttons and the book table
-    const categoryButtons = document.querySelectorAll('.category-btn');
-    const bookTable = document.querySelector('.data-table tbody');
-    const rows = bookTable.getElementsByTagName('tr');
-    const searchInput = document.querySelector('.search-container input');
-    const searchButton = document.querySelector('.search-container button');
-
-    // Function to filter books based on search text
-    function searchBooks(searchText) {
-      searchText = searchText.toLowerCase().trim();
-      
-      for (let row of rows) {
-        // Get text from relevant columns (title, author, ISBN)
-        const title = row.cells[1].textContent.toLowerCase();
-        const author = row.cells[2].textContent.toLowerCase();
-        const isbn = row.cells[3].textContent.toLowerCase();
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize user data
+      const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+      if (currentUser) {
+        // Update user name in the header
+        const userNameElements = document.querySelectorAll('#user-name');
+        userNameElements.forEach(element => {
+          element.textContent = currentUser.name || 'User';
+        });
         
-        // Check if any of the columns contain the search text
-        const matchesSearch = title.includes(searchText) || 
-                            author.includes(searchText) || 
-                            isbn.includes(searchText);
-        
-        // Get current location filter
-        const activeLocation = document.querySelector('.category-btn.active').dataset.category;
-        const locationCell = row.cells[5].textContent.trim().toLowerCase();
-        const locationToMatch = activeLocation === 'all' ? 'all' : 
-          activeLocation.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ').toLowerCase();
-        
-        // Show row if it matches both search and location filter
-        const matchesLocation = activeLocation === 'all' || locationCell === locationToMatch;
-        row.style.display = (matchesSearch && matchesLocation) ? '' : 'none';
+        // Update profile image if exists
+        const userProfileImg = document.getElementById('user-profile-img');
+        if (currentUser.profileImage && userProfileImg) {
+          userProfileImg.src = currentUser.profileImage;
+        }
       }
-    }
 
-    // Add search functionality
-    searchInput.addEventListener('input', function() {
-      searchBooks(this.value);
-    });
+      // Edit Profile Modal Functionality
+      const editProfileBtn = document.getElementById('edit-profile');
+      const profileModal = document.getElementById('profile-modal');
+      const closeModalButtons = document.querySelectorAll('.close-modal');
+      const cancelProfileEdit = document.getElementById('cancel-profile-edit');
+      const saveProfileBtn = document.getElementById('save-profile');
+      const profilePhoto = document.getElementById('profile-photo');
+      const profilePreview = document.getElementById('profile-preview');
+      const userProfileImg = document.getElementById('user-profile-img');
 
-    searchButton.addEventListener('click', function() {
-      searchBooks(searchInput.value);
-    });
-
-    // Update the existing filterBooks function to work with search
-    function filterBooks(location) {
-      const searchText = searchInput.value.toLowerCase().trim();
-      
-      for (let row of rows) {
-        const locationCell = row.cells[5].textContent.trim().toLowerCase();
-        
-        // Get text from relevant columns for search
-        const title = row.cells[1].textContent.toLowerCase();
-        const author = row.cells[2].textContent.toLowerCase();
-        const isbn = row.cells[3].textContent.toLowerCase();
-        
-        // Check search matches
-        const matchesSearch = title.includes(searchText) || 
-                            author.includes(searchText) || 
-                            isbn.includes(searchText);
-        
-        if (location === 'all') {
-          // Show row if it matches search
-          row.style.display = matchesSearch ? '' : 'none';
-        } else {
-          // Convert location to match the format in the table
-          const locationToMatch = location.split('-').map(word => 
-            word.charAt(0).toUpperCase() + word.slice(1)
-          ).join(' ').toLowerCase();
+      // Open modal
+      if (editProfileBtn && profileModal) {
+        editProfileBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          console.log('Edit profile button clicked in manage books page');
           
-          // Show row if it matches both location and search
-          const matchesLocation = locationCell === locationToMatch;
-          row.style.display = (matchesSearch && matchesLocation) ? '' : 'none';
+          // Get current user data
+          const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+          if (!currentUser) {
+            console.error('No user data found in localStorage');
+            return;
+          }
+          
+          // Populate modal with user data
+          document.getElementById('profile-id').value = currentUser.id || '';
+          document.getElementById('profile-lastname').value = currentUser.lastName || '';
+          document.getElementById('profile-firstname').value = currentUser.firstName || '';
+          document.getElementById('profile-middlename').value = currentUser.middleName || '';
+          document.getElementById('profile-email').value = currentUser.email || '';
+          
+          // Set profile image if exists
+          if (currentUser.profileImage) {
+            profilePreview.src = currentUser.profileImage;
+          }
+          
+          // Show modal
+          profileModal.classList.add('active');
+        });
+      }
+
+      // Close modal function
+      function closeProfileModal() {
+        profileModal.classList.remove('active');
+        // Clear password fields
+        document.getElementById('profile-current-password').value = '';
+        document.getElementById('profile-new-password').value = '';
+      }
+
+      // Close modal event listeners
+      if (closeModalButtons.length > 0) {
+        closeModalButtons.forEach(button => {
+          button.addEventListener('click', closeProfileModal);
+        });
+      }
+
+      if (cancelProfileEdit) {
+        cancelProfileEdit.addEventListener('click', closeProfileModal);
+      }
+
+      // Close modal when clicking outside
+      profileModal.addEventListener('click', function(e) {
+        if (e.target === profileModal) {
+          closeProfileModal();
         }
+      });
+
+      // Profile photo upload
+      if (profilePhoto && profilePreview) {
+        profilePhoto.addEventListener('change', function() {
+          const file = this.files[0];
+          if (file) {
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+              const imageData = e.target.result;
+              profilePreview.src = imageData;
+              // Also update the header profile image
+              if (userProfileImg) {
+                userProfileImg.src = imageData;
+              }
+              
+              // Update user data in localStorage
+              const currentUser = JSON.parse(localStorage.getItem('currentUser')) || {};
+              currentUser.profileImage = imageData;
+              localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            };
+            
+            reader.readAsDataURL(file);
+          }
+        });
       }
 
-      // Update active button state
-      categoryButtons.forEach(btn => {
-        if (btn.dataset.category === location) {
-          btn.classList.add('active');
-        } else {
-          btn.classList.remove('active');
-        }
-      });
-    }
-
-    // Add click event listeners to category buttons
-    categoryButtons.forEach(button => {
-      button.addEventListener('click', function() {
-        const location = this.dataset.category;
-        filterBooks(location);
-      });
-    });
-
-    // Add clear search functionality
-    const resetButton = document.querySelector('.btn-secondary.sm');
-    resetButton.addEventListener('click', function() {
-      searchInput.value = '';
-      // Reset to current location filter
-      const activeLocation = document.querySelector('.category-btn.active').dataset.category;
-      filterBooks(activeLocation);
-    });
-
-    // Add/Edit Book Modal Functionality
-    const addBookBtn = document.getElementById('add-book-btn');
-    const bookModal = document.getElementById('book-modal');
-    const closeModalBtns = document.querySelectorAll('.close-modal');
-    const saveBookBtn = document.getElementById('save-book');
-
-    // Open modal
-    addBookBtn.addEventListener('click', () => {
-      document.getElementById('book-modal-title').textContent = 'Add New Book';
-      bookModal.style.display = 'block';
-    });
-
-    // Close modal
-    closeModalBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        bookModal.style.display = 'none';
-        document.getElementById('delete-modal').style.display = 'none';
-      });
-    });
-
-    // Close modal when clicking outside
-    window.addEventListener('click', (e) => {
-      if (e.target === bookModal) {
-        bookModal.style.display = 'none';
-      }
-      if (e.target === document.getElementById('delete-modal')) {
-        document.getElementById('delete-modal').style.display = 'none';
+      // Save profile changes
+      if (saveProfileBtn) {
+        saveProfileBtn.addEventListener('click', function() {
+          const lastName = document.getElementById('profile-lastname').value.trim();
+          const firstName = document.getElementById('profile-firstname').value.trim();
+          const middleName = document.getElementById('profile-middlename').value.trim();
+          const email = document.getElementById('profile-email').value.trim();
+          const currentPassword = document.getElementById('profile-current-password').value;
+          const newPassword = document.getElementById('profile-new-password').value;
+          
+          // Validation
+          if (!lastName || !firstName || !email || !currentPassword) {
+            alert('Please fill in all required fields.');
+            return;
+          }
+          
+          // Email validation
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (!emailRegex.test(email)) {
+            alert('Please enter a valid email address.');
+            return;
+          }
+          
+          // Get current user data
+          const currentUser = JSON.parse(localStorage.getItem('currentUser')) || {};
+          
+          // Update user data
+          currentUser.lastName = lastName;
+          currentUser.firstName = firstName;
+          currentUser.middleName = middleName;
+          currentUser.email = email;
+          currentUser.name = `${firstName} ${lastName}`;
+          
+          // Save updated user data
+          localStorage.setItem('currentUser', JSON.stringify(currentUser));
+          
+          // Update displayed name
+          const userNameElements = document.querySelectorAll('#user-name');
+          userNameElements.forEach(element => {
+            element.textContent = currentUser.name;
+          });
+          
+          // Show success message
+          alert('Profile updated successfully!');
+          
+          // Close modal and clear fields
+          closeProfileModal();
+        });
       }
     });
-
-    // Delete Book Functionality
-    const deleteButtons = document.querySelectorAll('.btn-icon[title="Delete"]');
-    const deleteModal = document.getElementById('delete-modal');
-    const confirmDeleteBtn = document.getElementById('confirm-delete');
-    let bookToDelete = null;
-
-    deleteButtons.forEach(btn => {
-      btn.addEventListener('click', function() {
-        const row = this.closest('tr');
-        const bookTitle = row.cells[1].textContent; // Title is in the 2nd column
-        document.getElementById('delete-book-title').textContent = bookTitle;
-        bookToDelete = row;
-        deleteModal.style.display = 'block';
-      });
-    });
-
-    confirmDeleteBtn.addEventListener('click', () => {
-      if (bookToDelete) {
-        bookToDelete.remove();
-        deleteModal.style.display = 'none';
-        bookToDelete = null;
-      }
-    });
-
-    // Edit Book Functionality
-    const editButtons = document.querySelectorAll('.btn-icon[title="Edit"]');
-    
-    editButtons.forEach(btn => {
-      btn.addEventListener('click', function() {
-        const row = this.closest('tr');
-        const cells = row.cells;
-        
-        // Set modal title
-        document.getElementById('book-modal-title').textContent = 'Edit Book';
-        
-        // Populate form fields
-        document.getElementById('book-title').value = cells[1].textContent;
-        document.getElementById('book-author').value = cells[2].textContent;
-        document.getElementById('book-isbn').value = cells[3].textContent;
-        document.getElementById('book-subject').value = cells[4].textContent.toLowerCase().replace(' ', '-');
-        document.getElementById('book-location').value = cells[5].textContent.toLowerCase().replace(' ', '-');
-        
-        // Get stock number from the badge
-        const stockBadge = cells[6].querySelector('.stock-badge');
-        document.getElementById('book-copies').value = stockBadge.textContent;
-        
-        // Show modal
-        bookModal.style.display = 'block';
-      });
-    });
-
-    // Save Book Functionality
-    saveBookBtn.addEventListener('click', () => {
-      // Get form values
-      const title = document.getElementById('book-title').value;
-      const author = document.getElementById('book-author').value;
-      const isbn = document.getElementById('book-isbn').value;
-      const subject = document.getElementById('book-subject').value;
-      const location = document.getElementById('book-location').value;
-      const copies = document.getElementById('book-copies').value;
-      
-      // Create or update row
-      if (document.getElementById('book-modal-title').textContent === 'Add New Book') {
-        // Add new row
-        const newRow = bookTable.insertRow();
-        newRow.innerHTML = `
-          <td>
-            <img src="https://covers.openlibrary.org/b/id/8091016-S.jpg" alt="Book Cover" class="book-thumbnail">
-          </td>
-          <td>${title}</td>
-          <td>${author}</td>
-          <td>${isbn}</td>
-          <td>${subject.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}</td>
-          <td>${location.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}</td>
-          <td><span class="stock-badge ${copies > 10 ? 'good' : copies > 0 ? 'low' : 'out'}">${copies}</span></td>
-          <td>
-            <button class="btn-icon" title="View Details"><i class="fas fa-eye"></i></button>
-            <button class="btn-icon" title="Edit"><i class="fas fa-edit"></i></button>
-            <button class="btn-icon" title="Delete"><i class="fas fa-trash"></i></button>
-          </td>
-        `;
-      } else {
-        // Update existing row
-        const row = bookToDelete;
-        if (row) {
-          row.cells[1].textContent = title;
-          row.cells[2].textContent = author;
-          row.cells[3].textContent = isbn;
-          row.cells[4].textContent = subject.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-          row.cells[5].textContent = location.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-          row.cells[6].innerHTML = `<span class="stock-badge ${copies > 10 ? 'good' : copies > 0 ? 'low' : 'out'}">${copies}</span>`;
-        }
-      }
-      
-      // Close modal
-      bookModal.style.display = 'none';
-    });
-  });
   </script>
 </body>
 </html>

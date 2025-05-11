@@ -1008,3 +1008,29 @@ p {
   color: var(--primary-700);
 }
 
+/* Disabled Field Styles */
+.disabled-field {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.disabled-field input {
+  background-color: var(--neutral-100);
+  color: var(--neutral-600);
+  cursor: not-allowed;
+  padding-right: 2.5rem;
+}
+
+.disabled-field i {
+  position: absolute;
+  right: 1rem;
+  color: var(--neutral-500);
+  pointer-events: none;
+}
+
+.disabled-field input:disabled {
+  border-color: var(--neutral-300);
+  background-color: var(--neutral-100);
+}
+

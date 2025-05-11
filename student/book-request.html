@@ -342,6 +342,250 @@
     </div>
   </div>
 
+  <!-- Edit Profile Modal -->
+  <div class="modal" id="profile-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Edit Profile</h2>
+        <button class="close-modal">&times;</button>
+      </div>
+      
+      <div class="modal-body">
+        <form id="profile-form">
+          <div class="profile-photo-container">
+            <img src="../assets/images/default-profile.png" alt="Profile Photo" id="profile-preview">
+            <div class="photo-upload">
+              <label for="profile-photo" class="btn btn-secondary">
+                <i class="fas fa-camera"></i> Change Photo
+              </label>
+              <input type="file" id="profile-photo" accept="image/*" hidden>
+              <p class="help-text">Max file size: 2MB. Supported formats: JPG, PNG</p>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="profile-id">Student/Employee Number</label>
+            <div class="disabled-field">
+              <input type="text" id="profile-id" class="form-control" disabled readonly>
+              <i class="fas fa-lock"></i>
+            </div>
+            <p class="help-text">This is your permanent identification number and cannot be changed</p>
+          </div>
+          
+          <div class="form-group">
+            <label>Name</label>
+            <div class="name-fields">
+              <div class="form-group">
+                <input type="text" id="profile-lastname" class="form-control" placeholder="Last Name" required>
+              </div>
+              <div class="form-group">
+                <input type="text" id="profile-firstname" class="form-control" placeholder="First Name" required>
+              </div>
+              <div class="form-group">
+                <input type="text" id="profile-middlename" class="form-control" placeholder="Middle Name (Optional)">
+              </div>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="profile-email">Email Address</label>
+            <input type="email" id="profile-email" class="form-control" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="profile-current-password">Current Password</label>
+            <input type="password" id="profile-current-password" class="form-control" required>
+            <p class="help-text">Enter your current password to confirm changes</p>
+          </div>
+          
+          <div class="form-group">
+            <label for="profile-new-password">New Password</label>
+            <input type="password" id="profile-new-password" class="form-control" minlength="8">
+            <p class="help-text">Leave blank to keep current password. Minimum 8 characters.</p>
+          </div>
+        </form>
+      </div>
+      
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="cancel-profile-edit">Cancel</button>
+        <button class="btn btn-primary" id="save-profile" form="profile-form">Save Changes</button>
+      </div>
+    </div>
+  </div>
+
   <script src="../../js/student.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize user data
+      const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+      if (currentUser) {
+        // Update user name in the header
+        const userNameElements = document.querySelectorAll('#user-name');
+        userNameElements.forEach(element => {
+          element.textContent = currentUser.name || 'User';
+        });
+        
+        // Update profile image if exists
+        const userProfileImg = document.getElementById('user-profile-img');
+        if (currentUser.profileImage && userProfileImg) {
+          userProfileImg.src = currentUser.profileImage;
+        }
+
+        // Update email in request modal if it exists
+        const emailConfirm = document.getElementById('email-confirm');
+        if (emailConfirm && currentUser.email) {
+          emailConfirm.value = currentUser.email;
+        }
+      }
+
+      // Edit Profile Modal Functionality
+      const editProfileBtn = document.getElementById('edit-profile');
+      const profileModal = document.getElementById('profile-modal');
+      const closeModalButtons = document.querySelectorAll('.close-modal');
+      const cancelProfileEdit = document.getElementById('cancel-profile-edit');
+      const saveProfileBtn = document.getElementById('save-profile');
+      const profilePhoto = document.getElementById('profile-photo');
+      const profilePreview = document.getElementById('profile-preview');
+      const userProfileImg = document.getElementById('user-profile-img');
+
+      // Open modal
+      if (editProfileBtn && profileModal) {
+        editProfileBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          console.log('Edit profile button clicked in book request page');
+          
+          // Get current user data
+          const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+          if (!currentUser) {
+            console.error('No user data found in localStorage');
+            return;
+          }
+          
+          // Populate modal with user data
+          document.getElementById('profile-id').value = currentUser.id || '';
+          document.getElementById('profile-lastname').value = currentUser.lastName || '';
+          document.getElementById('profile-firstname').value = currentUser.firstName || '';
+          document.getElementById('profile-middlename').value = currentUser.middleName || '';
+          document.getElementById('profile-email').value = currentUser.email || '';
+          
+          // Set profile image if exists
+          if (currentUser.profileImage) {
+            profilePreview.src = currentUser.profileImage;
+          }
+          
+          // Show modal
+          profileModal.classList.add('active');
+        });
+      }
+
+      // Close modal function
+      function closeProfileModal() {
+        profileModal.classList.remove('active');
+        // Clear password fields
+        document.getElementById('profile-current-password').value = '';
+        document.getElementById('profile-new-password').value = '';
+      }
+
+      // Close modal event listeners
+      if (closeModalButtons.length > 0) {
+        closeModalButtons.forEach(button => {
+          button.addEventListener('click', closeProfileModal);
+        });
+      }
+
+      if (cancelProfileEdit) {
+        cancelProfileEdit.addEventListener('click', closeProfileModal);
+      }
+
+      // Close modal when clicking outside
+      profileModal.addEventListener('click', function(e) {
+        if (e.target === profileModal) {
+          closeProfileModal();
+        }
+      });
+
+      // Profile photo upload
+      if (profilePhoto && profilePreview) {
+        profilePhoto.addEventListener('change', function() {
+          const file = this.files[0];
+          if (file) {
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+              const imageData = e.target.result;
+              profilePreview.src = imageData;
+              // Also update the header profile image
+              if (userProfileImg) {
+                userProfileImg.src = imageData;
+              }
+              
+              // Update user data in localStorage
+              const currentUser = JSON.parse(localStorage.getItem('currentUser')) || {};
+              currentUser.profileImage = imageData;
+              localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            };
+            
+            reader.readAsDataURL(file);
+          }
+        });
+      }
+
+      // Save profile changes
+      if (saveProfileBtn) {
+        saveProfileBtn.addEventListener('click', function() {
+          const lastName = document.getElementById('profile-lastname').value.trim();
+          const firstName = document.getElementById('profile-firstname').value.trim();
+          const middleName = document.getElementById('profile-middlename').value.trim();
+          const email = document.getElementById('profile-email').value.trim();
+          const currentPassword = document.getElementById('profile-current-password').value;
+          const newPassword = document.getElementById('profile-new-password').value;
+          
+          // Validation
+          if (!lastName || !firstName || !email || !currentPassword) {
+            alert('Please fill in all required fields.');
+            return;
+          }
+          
+          // Email validation
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (!emailRegex.test(email)) {
+            alert('Please enter a valid email address.');
+            return;
+          }
+          
+          // Get current user data
+          const currentUser = JSON.parse(localStorage.getItem('currentUser')) || {};
+          
+          // Update user data
+          currentUser.lastName = lastName;
+          currentUser.firstName = firstName;
+          currentUser.middleName = middleName;
+          currentUser.email = email;
+          currentUser.name = `${firstName} ${lastName}`;
+          
+          // Save updated user data
+          localStorage.setItem('currentUser', JSON.stringify(currentUser));
+          
+          // Update displayed name
+          const userNameElements = document.querySelectorAll('#user-name');
+          userNameElements.forEach(element => {
+            element.textContent = currentUser.name;
+          });
+
+          // Update email in request modal if it exists
+          const emailConfirm = document.getElementById('email-confirm');
+          if (emailConfirm) {
+            emailConfirm.value = currentUser.email;
+          }
+          
+          // Show success message
+          alert('Profile updated successfully!');
+          
+          // Close modal and clear fields
+          closeProfileModal();
+        });
+      }
+    });
+  </script>
 </body>
 </html>

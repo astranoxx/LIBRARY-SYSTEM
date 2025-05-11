@@ -75,35 +75,55 @@ document.addEventListener('DOMContentLoaded', function() {
   
   if (editProfileBtn && profileModal) {
     // Open modal
-    editProfileBtn.addEventListener('click', function() {
+    editProfileBtn.addEventListener('click', function(e) {
+      e.preventDefault(); // Prevent default link behavior
+      console.log('Edit profile button clicked'); // Debug log
+      
+      // Get current user data from localStorage
+      const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+      if (!currentUser) {
+        console.error('No user data found in localStorage');
+        return;
+      }
+      
+      // Populate modal with user data
+      document.getElementById('profile-id').value = currentUser.id || '';
+      document.getElementById('profile-lastname').value = currentUser.lastName || '';
+      document.getElementById('profile-firstname').value = currentUser.firstName || '';
+      document.getElementById('profile-middlename').value = currentUser.middleName || '';
+      document.getElementById('profile-email').value = currentUser.email || '';
+      
+      // Set profile image if exists
+      if (currentUser.profileImage) {
+        document.getElementById('profile-preview').src = currentUser.profileImage;
+      }
+      
+      // Show modal
       profileModal.classList.add('active');
-      // Populate fields with user data (would come from server in real app)
-      document.getElementById('profile-id').value = currentUser.id;
-      document.getElementById('profile-lastname').value = 'Doe';
-      document.getElementById('profile-firstname').value = 'John';
-      document.getElementById('profile-middlename').value = 'Smith';
-      document.getElementById('profile-email').value = 'john.doe@example.com';
     });
     
     // Close modal
+    function closeProfileModal() {
+      profileModal.classList.remove('active');
+      // Clear password fields
+      document.getElementById('profile-current-password').value = '';
+      document.getElementById('profile-new-password').value = '';
+    }
+    
     if (closeModalButtons.length > 0) {
       closeModalButtons.forEach(button => {
-        button.addEventListener('click', function() {
-          profileModal.classList.remove('active');
-        });
+        button.addEventListener('click', closeProfileModal);
       });
     }
     
     if (cancelProfileEdit) {
-      cancelProfileEdit.addEventListener('click', function() {
-        profileModal.classList.remove('active');
-      });
+      cancelProfileEdit.addEventListener('click', closeProfileModal);
     }
     
     // Close modal when clicking outside
     profileModal.addEventListener('click', function(e) {
       if (e.target === profileModal) {
-        profileModal.classList.remove('active');
+        closeProfileModal();
       }
     });
   }
@@ -120,11 +140,17 @@ document.addEventListener('DOMContentLoaded', function() {
         const reader = new FileReader();
         
         reader.onload = function(e) {
-          profilePreview.src = e.target.result;
+          const imageData = e.target.result;
+          profilePreview.src = imageData;
           // Also update the header profile image
           if (userProfileImg) {
-            userProfileImg.src = e.target.result;
+            userProfileImg.src = imageData;
           }
+          
+          // Update user data in localStorage
+          const currentUser = JSON.parse(localStorage.getItem('currentUser')) || {};
+          currentUser.profileImage = imageData;
+          localStorage.setItem('currentUser', JSON.stringify(currentUser));
         };
         
         reader.readAsDataURL(file);
@@ -137,10 +163,10 @@ document.addEventListener('DOMContentLoaded', function() {
   
   if (saveProfileBtn) {
     saveProfileBtn.addEventListener('click', function() {
-      const lastName = document.getElementById('profile-lastname').value;
-      const firstName = document.getElementById('profile-firstname').value;
-      const middleName = document.getElementById('profile-middlename').value;
-      const email = document.getElementById('profile-email').value;
+      const lastName = document.getElementById('profile-lastname').value.trim();
+      const firstName = document.getElementById('profile-firstname').value.trim();
+      const middleName = document.getElementById('profile-middlename').value.trim();
+      const email = document.getElementById('profile-email').value.trim();
       const currentPassword = document.getElementById('profile-current-password').value;
       const newPassword = document.getElementById('profile-new-password').value;
       
@@ -157,21 +183,34 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
       }
       
-      // In a real app, you would send this data to the server
-      // For demo purposes, we'll just show a success message
+      // Get current user data
+      const currentUser = JSON.parse(localStorage.getItem('currentUser')) || {};
       
-      alert('Profile updated successfully!');
-      profileModal.classList.remove('active');
+      // Update user data
+      currentUser.lastName = lastName;
+      currentUser.firstName = firstName;
+      currentUser.middleName = middleName;
+      currentUser.email = email;
+      currentUser.name = `${firstName} ${lastName}`; // Update display name
+      
+      // Save updated user data
+      localStorage.setItem('currentUser', JSON.stringify(currentUser));
       
       // Update displayed name
-      const updatedName = `${firstName} ${lastName}`;
+      const userNameElements = document.querySelectorAll('#user-name');
       userNameElements.forEach(element => {
-        element.textContent = updatedName;
+        element.textContent = currentUser.name;
       });
       
-      // Update user object in localStorage
-      currentUser.name = updatedName;
-      localStorage.setItem('currentUser', JSON.stringify(currentUser));
+      // Show success message
+      alert('Profile updated successfully!');
+      
+      // Close modal
+      profileModal.classList.remove('active');
+      
+      // Clear password fields
+      document.getElementById('profile-current-password').value = '';
+      document.getElementById('profile-new-password').value = '';
     });
   }
   

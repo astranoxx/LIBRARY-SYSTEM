@@ -475,6 +475,151 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     }
   }
+
+  // Profile modal
+  const editProfileBtn = document.getElementById('edit-profile');
+  const profileModal = document.getElementById('profile-modal');
+  const profileCloseButtons = document.querySelectorAll('#profile-modal .close-modal');
+  const cancelProfileEdit = document.getElementById('cancel-profile-edit');
+  const saveProfileBtn = document.getElementById('save-profile');
+  const profilePhoto = document.getElementById('profile-photo');
+  const profilePreview = document.getElementById('profile-preview');
+  const userProfileImg = document.getElementById('user-profile-img');
+
+  if (editProfileBtn && profileModal) {
+    // Open modal
+    editProfileBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      console.log('Edit profile button clicked');
+      
+      // Get current user data from localStorage
+      const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+      if (!currentUser) {
+        console.error('No user data found in localStorage');
+        return;
+      }
+      
+      // Populate modal with user data
+      document.getElementById('profile-id').value = currentUser.id || '';
+      document.getElementById('profile-lastname').value = currentUser.lastName || '';
+      document.getElementById('profile-firstname').value = currentUser.firstName || '';
+      document.getElementById('profile-middlename').value = currentUser.middleName || '';
+      document.getElementById('profile-email').value = currentUser.email || '';
+      
+      // Set profile image if exists
+      if (currentUser.profileImage) {
+        profilePreview.src = currentUser.profileImage;
+      }
+      
+      // Show modal
+      profileModal.classList.add('active');
+    });
+    
+    // Close modal
+    function closeProfileModal() {
+      profileModal.classList.remove('active');
+      // Clear password fields
+      document.getElementById('profile-current-password').value = '';
+      document.getElementById('profile-new-password').value = '';
+    }
+    
+    if (profileCloseButtons.length > 0) {
+      profileCloseButtons.forEach(button => {
+        button.addEventListener('click', closeProfileModal);
+      });
+    }
+    
+    if (cancelProfileEdit) {
+      cancelProfileEdit.addEventListener('click', closeProfileModal);
+    }
+    
+    // Close modal when clicking outside
+    profileModal.addEventListener('click', function(e) {
+      if (e.target === profileModal) {
+        closeProfileModal();
+      }
+    });
+  }
+
+  // Profile photo upload
+  if (profilePhoto && profilePreview) {
+    profilePhoto.addEventListener('change', function() {
+      const file = this.files[0];
+      if (file) {
+        const reader = new FileReader();
+        
+        reader.onload = function(e) {
+          const imageData = e.target.result;
+          profilePreview.src = imageData;
+          // Also update the header profile image
+          if (userProfileImg) {
+            userProfileImg.src = imageData;
+          }
+          
+          // Update user data in localStorage
+          const currentUser = JSON.parse(localStorage.getItem('currentUser')) || {};
+          currentUser.profileImage = imageData;
+          localStorage.setItem('currentUser', JSON.stringify(currentUser));
+        };
+        
+        reader.readAsDataURL(file);
+      }
+    });
+  }
+
+  // Save profile changes
+  if (saveProfileBtn) {
+    saveProfileBtn.addEventListener('click', function() {
+      const lastName = document.getElementById('profile-lastname').value.trim();
+      const firstName = document.getElementById('profile-firstname').value.trim();
+      const middleName = document.getElementById('profile-middlename').value.trim();
+      const email = document.getElementById('profile-email').value.trim();
+      const currentPassword = document.getElementById('profile-current-password').value;
+      const newPassword = document.getElementById('profile-new-password').value;
+      
+      // Simple validation
+      if (!lastName || !firstName || !email || !currentPassword) {
+        alert('Please fill in all required fields.');
+        return;
+      }
+      
+      // Email validation
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        alert('Please enter a valid email address.');
+        return;
+      }
+      
+      // Get current user data
+      const currentUser = JSON.parse(localStorage.getItem('currentUser')) || {};
+      
+      // Update user data
+      currentUser.lastName = lastName;
+      currentUser.firstName = firstName;
+      currentUser.middleName = middleName;
+      currentUser.email = email;
+      currentUser.name = `${firstName} ${lastName}`; // Update display name
+      
+      // Save updated user data
+      localStorage.setItem('currentUser', JSON.stringify(currentUser));
+      
+      // Update displayed name
+      const userNameElements = document.querySelectorAll('#user-name');
+      userNameElements.forEach(element => {
+        element.textContent = currentUser.name;
+      });
+      
+      // Show success message
+      alert('Profile updated successfully!');
+      
+      // Close modal
+      profileModal.classList.remove('active');
+      
+      // Clear password fields
+      document.getElementById('profile-current-password').value = '';
+      document.getElementById('profile-new-password').value = '';
+    });
+  }
 });
 
 function openMemberModal() {

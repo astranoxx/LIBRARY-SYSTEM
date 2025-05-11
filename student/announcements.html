@@ -191,6 +191,77 @@
     </main>
   </div>
 
+  <!-- Edit Profile Modal -->
+  <div class="modal" id="profile-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Edit Profile</h2>
+        <button class="close-modal">&times;</button>
+      </div>
+      
+      <div class="modal-body">
+        <form id="profile-form">
+          <div class="profile-photo-container">
+            <img src="../assets/images/default-profile.png" alt="Profile Photo" id="profile-preview">
+            <div class="photo-upload">
+              <label for="profile-photo" class="btn btn-secondary">
+                <i class="fas fa-camera"></i> Change Photo
+              </label>
+              <input type="file" id="profile-photo" accept="image/*" hidden>
+              <p class="help-text">Max file size: 2MB. Supported formats: JPG, PNG</p>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="profile-id">Student/Employee Number</label>
+            <div class="disabled-field">
+              <input type="text" id="profile-id" class="form-control" disabled readonly>
+              <i class="fas fa-lock"></i>
+            </div>
+            <p class="help-text">This is your permanent identification number and cannot be changed</p>
+          </div>
+          
+          <div class="form-group">
+            <label>Name</label>
+            <div class="name-fields">
+              <div class="form-group">
+                <input type="text" id="profile-lastname" class="form-control" placeholder="Last Name" required>
+              </div>
+              <div class="form-group">
+                <input type="text" id="profile-firstname" class="form-control" placeholder="First Name" required>
+              </div>
+              <div class="form-group">
+                <input type="text" id="profile-middlename" class="form-control" placeholder="Middle Name (Optional)">
+              </div>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="profile-email">Email Address</label>
+            <input type="email" id="profile-email" class="form-control" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="profile-current-password">Current Password</label>
+            <input type="password" id="profile-current-password" class="form-control" required>
+            <p class="help-text">Enter your current password to confirm changes</p>
+          </div>
+          
+          <div class="form-group">
+            <label for="profile-new-password">New Password</label>
+            <input type="password" id="profile-new-password" class="form-control" minlength="8">
+            <p class="help-text">Leave blank to keep current password. Minimum 8 characters.</p>
+          </div>
+        </form>
+      </div>
+      
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="cancel-profile-edit">Cancel</button>
+        <button class="btn btn-primary" id="save-profile" form="profile-form">Save Changes</button>
+      </div>
+    </div>
+  </div>
+
   <script src="../js/student.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function() {

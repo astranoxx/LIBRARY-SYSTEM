@@ -1709,3 +1709,71 @@ tbody tr:nth-child(even) {
     font-size: 12px;
   }
 }
+
+/* Profile Photo Container */
+.profile-photo-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+
+#profile-preview {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--primary-100);
+}
+
+/* Disabled Field Styles */
+.disabled-field {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.disabled-field input {
+  background-color: var(--neutral-100);
+  color: var(--neutral-600);
+  cursor: not-allowed;
+  padding-right: 2.5rem;
+}
+
+.disabled-field i {
+  position: absolute;
+  right: 1rem;
+  color: var(--neutral-500);
+  pointer-events: none;
+}
+
+.disabled-field input:disabled {
+  border-color: var(--neutral-300);
+  background-color: var(--neutral-100);
+}
+
+.photo-upload input[type="file"] {
+  display: none !important;
+}
+
+.photo-upload label.btn.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  background-color: var(--primary-600);
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 1rem;
+  transition: background 0.2s, color 0.2s;
+  margin-top: 10px;
+  box-shadow: 0 2px 6px rgba(59,130,246,0.08);
+}
+
+.photo-upload label.btn.btn-secondary:hover {
+  background-color: var(--primary-700);
+  color: #fff;
+}
